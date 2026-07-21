@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f5c2e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Antelmo" />
+  <title>Antelmo</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="app"></main>
+
+  <nav class="bottom-nav">
+    <button data-route="home" class="active">🏠<span>Inicio</span></button>
+    <button data-route="colonies">🐜<span>Colonias</span></button>
+    <button data-route="feeding">🌾<span>Alimentación</span></button>
+    <button data-route="stats">📊<span>Estadísticas</span></button>
+  </nav>
+
+  <template id="welcome-template">
+    <section class="welcome">
+      <div class="brand-mark">🐜🍃</div>
+      <h1>Antelmo</h1>
+      <p class="tagline">Tu mundo, sus colonias.</p>
+      <div class="feature-list">
+        <article><span>🌿</span><div><strong>Registra</strong><p>Cada colonia y su evolución.</p></div></article>
+        <article><span>📈</span><div><strong>Analiza</strong><p>Obreras, cría, alimentación y actividad.</p></div></article>
+        <article><span>🛡️</span><div><strong>Cuida</strong><p>Con un historial claro y ordenado.</p></div></article>
+      </div>
+      <button id="start-app" class="primary large">Comenzar</button>
+    </section>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
