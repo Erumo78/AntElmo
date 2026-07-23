@@ -1,19 +1,20 @@
-ANTELMO V4.3.1 — CORRECCIÓN ANTDEX
+ANTELMO V5.0 — ANTDEX COMPLETA
 
-Esta revisión fuerza la actualización de los archivos en iPhone y navegador.
+NOVEDADES
+- AntDex enciclopédica con nivel y progreso por colonia.
+- Fichas editables de especie: distribución, tamaño, dificultad, temperatura, humedad, dieta y curiosidades.
+- Línea temporal automática con fundación, alimentación, eventos, recuentos y AntScan.
+- Sistema de logros y progreso de colección.
+- AntScan asistido local con fotografía, revisión guiada e informe de recomendaciones.
+- Botón para compartir una fotografía desde iPhone y solicitar una consulta visual externa.
+- Rangos AntDex en la sección Datos.
+- Álbum V4.3 conservado: Fototeca, cámara, selección múltiple, portada, edición y visor.
 
-CAMBIOS
-- La pestaña Colonias se llama ahora AntDex.
-- Al tocar una colonia aparece su ficha AntDex.
-- El selector permite Fototeca, Cámara o Archivos en iPhone.
-- Permite seleccionar varias fotos.
-- Se corrigen variables visuales de la galería.
-- Nueva caché V4.3.1 y archivos con versión para evitar que iOS use código antiguo.
-
-INSTALACIÓN
-1. Exporta una copia desde Más > Exportar.
+ACTUALIZACIÓN
+1. Exporta una copia de seguridad desde Más.
 2. Sustituye todos los archivos del repositorio por estos.
-3. Abre la web en Safari con ?v=431 al final una vez.
-4. Cierra completamente la app instalada y vuelve a abrirla.
+3. Abre https://erumo78.github.io/AntElmo/?v=500 en Safari.
+4. Cierra y vuelve a abrir la PWA instalada.
 
-Tus datos siguen usando antelmo.v4 y no se cambian.
+DATOS
+La versión continúa utilizando localStorage "antelmo.v4" e IndexedDB "antelmo-media", por lo que conserva los datos actuales.
