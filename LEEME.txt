@@ -1,12 +1,11 @@
-ANTELMO V4
+ANTELMO V4.2 — instalación
 
-1. Sustituye en tu repositorio de GitHub Pages todos los archivos antiguos por los de esta carpeta.
-2. Conserva exactamente las carpetas y nombres de archivo.
-3. Espera a que GitHub Pages termine de publicar.
-4. Abre la web en Safari. La V4 migrará automáticamente los datos guardados por la V3 en ese mismo iPhone y dominio.
-5. Si el icono instalado sigue mostrando la versión anterior, abre primero la web en Safari y recárgala. Como último recurso, elimina el icono de inicio y vuelve a añadirlo.
+1. Haz primero una copia desde la app actual: Más > Exportar.
+2. Sube TODOS estos archivos al repositorio GitHub, sustituyendo los anteriores.
+3. Conserva la misma URL de GitHub Pages.
+4. Abre la web en Safari. La app conserva automáticamente los datos locales de V3/V4.
+5. Si ves la versión antigua, cierra la app, abre la URL en Safari y recarga. Como último recurso, elimina el icono de inicio y vuelve a añadirlo.
 
-IMPORTANTE
-- Los datos se guardan localmente en el navegador del dispositivo.
-- Usa Más > Exportar para crear copias completas, incluidas las fotografías.
-- Cambiar de dominio o borrar los datos de Safari puede eliminar la copia local si no tienes una exportación.
+Incluye: colonias, fotos, diario, recuentos, gráficos, recordatorios, inventario, calendario, fauna y terrarios, mediciones ambientales, búsqueda global, avisos de alimentación, análisis local, copias completas y modo offline.
+
+Las funciones de IA real, reconocimiento automático de especies y sincronización entre dispositivos requieren un servicio externo/backend y no se incluyen en esta versión totalmente local y privada.
