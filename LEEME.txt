@@ -9,3 +9,10 @@ ANTELMO V4.2 — instalación
 Incluye: colonias, fotos, diario, recuentos, gráficos, recordatorios, inventario, calendario, fauna y terrarios, mediciones ambientales, búsqueda global, avisos de alimentación, análisis local, copias completas y modo offline.
 
 Las funciones de IA real, reconocimiento automático de especies y sincronización entre dispositivos requieren un servicio externo/backend y no se incluyen en esta versión totalmente local y privada.
+
+
+ANTELMO V4.3 ANTDEX
+- Fichas de colonia estilo colección AntDex.
+- Selección múltiple desde Fototeca, cámara o archivos.
+- Portada, fecha, descripción, visor y borrado de fotografías.
+- Compresión automática para reducir espacio.
