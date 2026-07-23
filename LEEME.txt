@@ -1,12 +1,12 @@
-ANTELMO PWA v3
+ANTELMO V4
 
-Incluye:
-- Fotos por colonia desde cámara o Fototeca (guardadas en IndexedDB).
-- Alimentaciones y línea temporal de eventos.
-- Recuentos y gráficos de crecimiento.
-- Recordatorios/tareas.
-- Modo terrario.
-- Exportación, importación y compartir copias completas, incluidas fotos.
-- Funcionamiento sin conexión mediante service worker.
+1. Sustituye en tu repositorio de GitHub Pages todos los archivos antiguos por los de esta carpeta.
+2. Conserva exactamente las carpetas y nombres de archivo.
+3. Espera a que GitHub Pages termine de publicar.
+4. Abre la web en Safari. La V4 migrará automáticamente los datos guardados por la V3 en ese mismo iPhone y dominio.
+5. Si el icono instalado sigue mostrando la versión anterior, abre primero la web en Safari y recárgala. Como último recurso, elimina el icono de inicio y vuelve a añadirlo.
 
-Publicación recomendada: sustituir los archivos del repositorio GitHub Pages por el contenido de esta carpeta. Después, abrir la web en Safari y usar Compartir > Añadir a pantalla de inicio.
+IMPORTANTE
+- Los datos se guardan localmente en el navegador del dispositivo.
+- Usa Más > Exportar para crear copias completas, incluidas las fotografías.
+- Cambiar de dominio o borrar los datos de Safari puede eliminar la copia local si no tienes una exportación.
