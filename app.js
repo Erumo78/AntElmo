@@ -1,298 +1,37 @@
-
-const STORAGE_KEY = "antelmo_data_v1";
-const WELCOME_KEY = "antelmo_started";
-
-const defaultData = {
-  colonies: [
-    {id:1,name:"Colonia 1",species:"Messor barbarus",workers:200,queens:1,status:"Estable",founded:"2023-07-01",location:"Nido de tierra",notes:"Colonia con mayor población y abundante cría."},
-    {id:2,name:"Colonia 2",species:"Messor barbarus",workers:120,queens:1,status:"Estable",founded:"2024-07-01",location:"Tubo y hormiguero acrílico",notes:"La reina y la cría permanecen en el tubo."},
-    {id:3,name:"Colonia 3",species:"Messor barbarus",workers:25,queens:1,status:"Crecimiento",founded:"2026-07-10",location:"Mini caja de forrajeo",notes:"Semillas de chía, amapola y néctar."},
-    {id:4,name:"Colonia 4",species:"Lasius niger",workers:12,queens:1,status:"Estable",founded:"2026-07-16",location:"Tubo de ensayo",notes:"Colonia joven."},
-    {id:5,name:"Colonia 5",species:"Lasius flavus",workers:12,queens:1,status:"Estable",founded:"2026-07-14",location:"Tubo de ensayo",notes:"Hormiga ORO."},
-    {id:6,name:"Colonia 6",species:"Crematogaster scutellaris",workers:7,queens:1,status:"Estable",founded:"2026-07-16",location:"Tubo de ensayo",notes:"Reina y siete obreras."},
-    {id:7,name:"Colonia 7",species:"Camponotus barbaricus",workers:0,queens:1,status:"Pendiente de llegada",founded:"2026-07-21",location:"Sin asignar",notes:"Prevista para el 21 de julio de 2026."}
-  ],
-  feedings: [
-    {id:1,colonyId:1,type:"Semillas",food:"Semillas de chía",date:"2026-07-20",notes:"Pequeña cantidad"},
-    {id:2,colonyId:1,type:"Dulce",food:"Néctar azucarado",date:"2026-07-20",notes:"Algodón empapado"},
-    {id:3,colonyId:3,type:"Semillas",food:"Semillas de amapola",date:"2026-07-18",notes:"Pequeña cantidad"},
-    {id:4,colonyId:1,type:"Proteína",food:"Medio grillo disecado",date:"2026-07-16",notes:"Proteína"}
-  ]
-};
-
-let data = loadData();
-let route = "home";
-let selectedColonyId = null;
-let feedingFilter = "Todos";
-
-function loadData(){
-  try{
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || structuredClone(defaultData);
-  }catch{
-    return structuredClone(defaultData);
-  }
-}
-function saveData(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-function el(id){ return document.getElementById(id); }
-function fmtDate(s){
-  if(!s) return "Sin fecha";
-  return new Date(s+"T12:00:00").toLocaleDateString("es-ES",{day:"2-digit",month:"short",year:"numeric"});
-}
-function totalWorkers(){ return data.colonies.reduce((a,c)=>a+(Number(c.workers)||0),0); }
-
-function render(){
-  if(!localStorage.getItem(WELCOME_KEY)){
-    document.querySelector(".bottom-nav").style.display="none";
-    const tpl = el("welcome-template").content.cloneNode(true);
-    el("app").replaceChildren(tpl);
-    el("start-app").onclick=()=>{
-      localStorage.setItem(WELCOME_KEY,"1");
-      document.querySelector(".bottom-nav").style.display="grid";
-      render();
-    };
-    return;
-  }
-  document.querySelector(".bottom-nav").style.display="grid";
-  document.querySelectorAll(".bottom-nav button").forEach(b=>{
-    b.classList.toggle("active", b.dataset.route===route);
-    b.onclick=()=>{ route=b.dataset.route; selectedColonyId=null; render(); };
-  });
-
-  if(selectedColonyId!==null) return renderColonyDetail();
-  if(route==="home") return renderHome();
-  if(route==="colonies") return renderColonies();
-  if(route==="feeding") return renderFeeding();
-  if(route==="stats") return renderStats();
-}
-
-function renderHome(){
-  const recent = [...data.colonies].slice(0,4);
-  el("app").innerHTML=`
-    <header class="header">
-      <div><h1>¡Hola, Elmo! 🍃</h1><div class="sub">Bienvenido a tu hormiguero digital.</div></div>
-      <button class="icon-btn" id="resetWelcome">↺</button>
-    </header>
-    <section class="summary">
-      <strong>Resumen general</strong>
-      <div class="summary-grid">
-        <div class="metric"><strong>${data.colonies.length}</strong><span>Colonias</span></div>
-        <div class="metric"><strong>${totalWorkers()}</strong><span>Obreras</span></div>
-        <div class="metric"><strong>${data.colonies.reduce((a,c)=>a+(Number(c.queens)||0),0)}</strong><span>Reinas</span></div>
-      </div>
-    </section>
-    <div class="section-title"><h2>Mis colonias</h2><button class="small-btn" id="seeAll">Ver todas</button></div>
-    <div id="colony-list">${recent.map(colonyCard).join("")}</div>
-    <div class="section-title"><h2>Última alimentación</h2></div>
-    ${data.feedings.length ? feedingCard([...data.feedings].sort((a,b)=>b.date.localeCompare(a.date))[0]) : '<div class="empty">Sin registros todavía.</div>'}
-  `;
-  bindColonyCards();
-  el("seeAll").onclick=()=>{route="colonies";render();};
-  el("resetWelcome").onclick=()=>{localStorage.removeItem(WELCOME_KEY);render();};
-}
-
-function colonyCard(c){
-  return `
-    <article class="card colony-card" data-id="${c.id}">
-      <div class="avatar">🐜</div>
-      <div>
-        <h3>${escapeHtml(c.name)}</h3>
-        <div class="meta"><em>${escapeHtml(c.species)}</em><br>👥 ${c.workers} obreras · 👑 ${c.queens}</div>
-      </div>
-      <div class="status">${escapeHtml(c.status)}</div>
-    </article>`;
-}
-function bindColonyCards(){
-  document.querySelectorAll(".colony-card").forEach(card=>{
-    card.onclick=()=>{selectedColonyId=Number(card.dataset.id);render();};
-  });
-}
-
-function renderColonies(){
-  el("app").innerHTML=`
-    <header class="header"><div><h1>Colonias</h1><div class="sub">Gestiona todas tus colonias.</div></div></header>
-    <div>${data.colonies.map(colonyCard).join("") || '<div class="empty">No hay colonias.</div>'}</div>
-    <button class="fab" id="addColony">+</button>
-  `;
-  bindColonyCards();
-  el("addColony").onclick=()=>renderColonyForm();
-}
-
-function renderColonyForm(colony=null){
-  const c=colony||{name:"",species:"",workers:0,queens:1,status:"Estable",founded:"",location:"",notes:""};
-  el("app").innerHTML=`
-    <header class="header"><div><h1>${colony?"Editar":"Nueva"} colonia</h1></div><button class="icon-btn" id="cancel">✕</button></header>
-    <section class="card">
-      <form id="colonyForm" class="form-grid">
-        <label>Nombre<input name="name" required value="${escapeAttr(c.name)}"></label>
-        <label>Especie<input name="species" required value="${escapeAttr(c.species)}"></label>
-        <label>Obreras<input name="workers" type="number" min="0" value="${c.workers}"></label>
-        <label>Reinas<input name="queens" type="number" min="0" value="${c.queens}"></label>
-        <label>Estado
-          <select name="status">
-            ${["Estable","Crecimiento","Observación","Pendiente de llegada"].map(s=>`<option ${s===c.status?"selected":""}>${s}</option>`).join("")}
-          </select>
-        </label>
-        <label>Fecha de fundación<input name="founded" type="date" value="${escapeAttr(c.founded)}"></label>
-        <label>Ubicación<input name="location" value="${escapeAttr(c.location)}"></label>
-        <label>Notas<textarea name="notes">${escapeHtml(c.notes)}</textarea></label>
-        <button class="primary" type="submit">Guardar colonia</button>
-      </form>
-    </section>`;
-  el("cancel").onclick=()=>render();
-  el("colonyForm").onsubmit=e=>{
-    e.preventDefault();
-    const fd=new FormData(e.target);
-    const obj=Object.fromEntries(fd.entries());
-    obj.workers=Number(obj.workers)||0; obj.queens=Number(obj.queens)||0;
-    if(colony){
-      Object.assign(colony,obj);
-    }else{
-      obj.id=Date.now();
-      data.colonies.push(obj);
-    }
-    saveData(); route="colonies"; selectedColonyId=null; render();
-  };
-}
-
-function renderColonyDetail(){
-  const c=data.colonies.find(x=>x.id===selectedColonyId);
-  if(!c){selectedColonyId=null;return render();}
-  const logs=data.feedings.filter(f=>f.colonyId===c.id).sort((a,b)=>b.date.localeCompare(a.date));
-  el("app").innerHTML=`
-    <header class="header">
-      <button class="icon-btn" id="back">←</button>
-      <button class="icon-btn" id="edit">Editar</button>
-    </header>
-    <section class="detail-hero">
-      <div class="ant">🐜</div>
-      <h1>${escapeHtml(c.name)}</h1>
-      <p>${escapeHtml(c.species)}</p>
-      <div class="detail-grid">
-        <div class="info-chip"><span>Estado</span><strong>${escapeHtml(c.status)}</strong></div>
-        <div class="info-chip"><span>Obreras</span><strong>${c.workers}</strong></div>
-        <div class="info-chip"><span>Reinas</span><strong>${c.queens}</strong></div>
-        <div class="info-chip"><span>Fundación</span><strong>${fmtDate(c.founded)}</strong></div>
-      </div>
-    </section>
-    <section class="card">
-      <h2>Información</h2>
-      <p><strong>Ubicación:</strong> ${escapeHtml(c.location||"Sin indicar")}</p>
-      <p><strong>Notas:</strong> ${escapeHtml(c.notes||"Sin notas")}</p>
-    </section>
-    <div class="section-title"><h2>Alimentación</h2><button class="small-btn" id="addFeed">Añadir</button></div>
-    ${logs.length?logs.map(feedingCard).join(""):'<div class="empty">Sin registros de alimentación.</div>'}
-    <div class="actions"><button class="danger" id="deleteColony">Eliminar colonia</button></div>
-  `;
-  el("back").onclick=()=>{selectedColonyId=null;render();};
-  el("edit").onclick=()=>renderColonyForm(c);
-  el("addFeed").onclick=()=>renderFeedingForm(c.id);
-  el("deleteColony").onclick=()=>{
-    if(confirm("¿Eliminar esta colonia y sus registros?")){
-      data.colonies=data.colonies.filter(x=>x.id!==c.id);
-      data.feedings=data.feedings.filter(x=>x.colonyId!==c.id);
-      saveData();selectedColonyId=null;route="colonies";render();
-    }
-  };
-}
-
-function feedingCard(f){
-  const colony=data.colonies.find(c=>c.id===f.colonyId);
-  const icon={Semillas:"🌾",Proteína:"🦗",Dulce:"🍯",Otros:"🍃"}[f.type]||"🍃";
-  return `<article class="card log-item">
-    <div class="log-icon">${icon}</div>
-    <div><strong>${escapeHtml(f.food)}</strong><div class="meta">${escapeHtml(colony?.name||"Colonia eliminada")} · ${escapeHtml(f.notes||"")}</div></div>
-    <div class="date">${fmtDate(f.date)}</div>
-  </article>`;
-}
-
-function renderFeeding(){
-  const types=["Todos","Semillas","Proteína","Dulce","Otros"];
-  let logs=[...data.feedings].sort((a,b)=>b.date.localeCompare(a.date));
-  if(feedingFilter!=="Todos") logs=logs.filter(x=>x.type===feedingFilter);
-  el("app").innerHTML=`
-    <header class="header"><div><h1>Alimentación</h1><div class="sub">Historial de comidas y suplementos.</div></div></header>
-    <div class="tabs">${types.map(t=>`<button data-type="${t}" class="${feedingFilter===t?"active":""}">${t}</button>`).join("")}</div>
-    <div>${logs.map(feedingCard).join("") || '<div class="empty">Sin registros en esta categoría.</div>'}</div>
-    <button class="fab" id="addFeed">+</button>
-  `;
-  document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{feedingFilter=b.dataset.type;render();});
-  el("addFeed").onclick=()=>renderFeedingForm();
-}
-
-function renderFeedingForm(preselected=null){
-  el("app").innerHTML=`
-    <header class="header"><div><h1>Nueva alimentación</h1></div><button class="icon-btn" id="cancel">✕</button></header>
-    <section class="card">
-      <form id="feedingForm" class="form-grid">
-        <label>Colonia<select name="colonyId">${data.colonies.map(c=>`<option value="${c.id}" ${c.id===preselected?"selected":""}>${escapeHtml(c.name)} — ${escapeHtml(c.species)}</option>`).join("")}</select></label>
-        <label>Tipo<select name="type"><option>Semillas</option><option>Proteína</option><option>Dulce</option><option>Otros</option></select></label>
-        <label>Alimento<input name="food" required placeholder="Ej.: semillas de chía"></label>
-        <label>Fecha<input name="date" type="date" required value="${new Date().toISOString().slice(0,10)}"></label>
-        <label>Notas<textarea name="notes" placeholder="Cantidad, reacción de la colonia..."></textarea></label>
-        <button class="primary" type="submit">Guardar registro</button>
-      </form>
-    </section>`;
-  el("cancel").onclick=()=>render();
-  el("feedingForm").onsubmit=e=>{
-    e.preventDefault();
-    const obj=Object.fromEntries(new FormData(e.target).entries());
-    obj.id=Date.now(); obj.colonyId=Number(obj.colonyId);
-    data.feedings.push(obj); saveData();
-    if(preselected){selectedColonyId=preselected;}else{route="feeding";}
-    render();
-  };
-}
-
-function renderStats(){
-  const max=Math.max(...data.colonies.map(c=>Number(c.workers)||0),1);
-  el("app").innerHTML=`
-    <header class="header"><div><h1>Estadísticas</h1><div class="sub">Vista general del proyecto.</div></div></header>
-    <section class="card">
-      <h2>Obreras por colonia</h2>
-      <div class="chart">${data.colonies.map(c=>`
-        <div class="bar-wrap">
-          <div class="bar" style="height:${Math.max(8,(c.workers/max)*140)}px"></div>
-          <span>${escapeHtml(c.name.replace("Colonia ","C"))}<br>${c.workers}</span>
-        </div>`).join("")}
-      </div>
-    </section>
-    <section class="card">
-      <h2>Resumen</h2>
-      <p><strong>${data.colonies.length}</strong> colonias registradas</p>
-      <p><strong>${totalWorkers()}</strong> obreras estimadas</p>
-      <p><strong>${data.feedings.length}</strong> registros de alimentación</p>
-      <p><strong>${new Set(data.colonies.map(c=>c.species)).size}</strong> especies</p>
-    </section>
-    <div class="actions">
-      <button class="secondary" id="exportData">Exportar copia</button>
-      <button class="secondary" id="importData">Importar copia</button>
-      <input type="file" id="importFile" accept="application/json" hidden>
-    </div>
-  `;
-  el("exportData").onclick=()=>{
-    const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="antelmo-copia.json";a.click();URL.revokeObjectURL(a.href);
-  };
-  el("importData").onclick=()=>el("importFile").click();
-  el("importFile").onchange=async e=>{
-    try{
-      const text=await e.target.files[0].text();
-      const parsed=JSON.parse(text);
-      if(!parsed.colonies||!parsed.feedings) throw new Error();
-      data=parsed;saveData();render();
-    }catch{alert("La copia no es válida.");}
-  };
-}
-
-function escapeHtml(v=""){
-  return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
-}
-function escapeAttr(v=""){return escapeHtml(v);}
-
-render();
-
-if("serviceWorker" in navigator){
-  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
-}
+const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const today=()=>new Date().toISOString().slice(0,10), uid=p=>p+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
+let db={colonies:[],feedings:[],events:[],growthRecords:[],tasks:[],inventory:[],fauna:[],observations:[],appConfig:{},metadata:{}};let route='home', selected=null;
+const navItems=[['home','⌂','Inicio'],['colonies','🐜','Colonias'],['records','✎','Registro'],['stats','▥','Estadísticas'],['more','•••','Más']];
+function toast(t){let x=$('#toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)}
+function save(){localStorage.setItem('antelmo.v3',JSON.stringify(db))}
+async function boot(){let s=localStorage.getItem('antelmo.v3');if(s){try{db=JSON.parse(s)}catch{}}else{db=await fetch('data.json').then(r=>r.json());save()}initIDB();render();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js')}
+function renderNav(){ $('#nav').innerHTML=navItems.map(([r,i,l])=>`<button class="${route===r?'active':''}" data-route="${r}"><i>${i}</i>${l}</button>`).join('');document.querySelectorAll('[data-route]').forEach(b=>b.onclick=()=>{route=b.dataset.route;selected=null;render()})}
+function totals(){let c=db.colonies.filter(x=>x.status!=='En tránsito');return{colonies:c.length,workers:c.reduce((a,x)=>a+(+x.workers||0),0),queens:c.reduce((a,x)=>a+(+x.queens||0),0),species:new Set(c.map(x=>x.species).filter(Boolean)).size}}
+function lastFeeding(id){return db.feedings.filter(f=>String(f.colonyId)===String(id)).sort((a,b)=>b.date.localeCompare(a.date))[0]}
+function daysSince(d){if(!d)return null;return Math.floor((new Date(today())-new Date(d))/86400000)}
+function render(){renderNav();$('#fab').style.display=['home','colonies','records'].includes(route)?'block':'none';let v=$('#view');if(route==='home')v.innerHTML=home();if(route==='colonies')v.innerHTML=colonies();if(route==='records')v.innerHTML=records();if(route==='stats')v.innerHTML=stats();if(route==='more')v.innerHTML=more();bind();}
+function home(){let t=totals(), urgent=(db.tasks||[]).filter(x=>x.status!=='Completada');return `<div id="install" class="install">Para instalar: Compartir → Añadir a pantalla de inicio.</div><section class="hero"><h1>¡Hola, Elmo! 🌿</h1><p>Tu hormiguero digital, ahora con fotos, gráficas y copias completas.</p><div class="stats"><div class="stat"><b>${t.colonies}</b>colonias</div><div class="stat"><b>${t.workers}</b>obreras</div><div class="stat"><b>${t.queens}</b>reinas</div><div class="stat"><b>${t.species}</b>especies</div></div></section><div class="section-head"><h2>Mis colonias</h2><button class="btn secondary" data-go="colonies">Ver todas</button></div><div class="grid">${db.colonies.slice(0,5).map(colonyCard).join('')}</div><div class="section-head"><h2>Tareas</h2><span class="muted">${urgent.length} pendientes</span></div><div class="grid">${urgent.slice(0,4).map(t=>`<div class="card"><b>${esc(t.title)}</b><div class="muted">${esc(t.dueDate||'Sin fecha')} · ${esc(t.priority||'Normal')}</div></div>`).join('')||'<div class="empty">Sin tareas pendientes 🎉</div>'}</div>`}
+function colonyCard(c){let lf=lastFeeding(c.id),d=daysSince(lf?.date);return `<div class="card colony" data-colony="${esc(c.id)}"><div class="thumb" id="cover-${esc(c.id)}">🐜</div><div><b>${esc(c.name)}</b><div class="muted"><i>${esc(c.species||'Especie sin confirmar')}</i></div><div class="muted">${esc(c.workers??'—')} obreras${d!=null?' · comida hace '+d+' d':''}</div></div><span class="status">${esc(c.status)}</span></div>`}
+function colonies(){return `<div class="section-head"><h2>Colonias</h2><button class="btn" data-action="growth">＋ Recuento</button></div><div class="grid">${db.colonies.map(colonyCard).join('')}</div>`}
+function records(){let all=[...db.events.map(x=>({...x,kind:'Evento'})),...db.feedings.map(x=>({...x,title:x.food,kind:'Alimentación'})),...(db.observations||[]).map(x=>({...x,title:x.title||x.notes,kind:'Observación'}))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));return `<div class="section-head"><h2>Línea temporal</h2><button class="btn" data-action="event">＋ Evento</button></div><div class="tabs"><button class="active">Todos</button><button data-action="feeding">🍽 Alimentación</button><button data-action="event">📅 Evento</button><button data-action="photo">📷 Foto</button></div><div class="timeline">${all.map(x=>`<div class="event"><b>${esc(x.title||x.type)}</b><div class="muted">${esc(x.date)} · ${esc(x.kind)} · ${esc(colonyName(x.colonyId))}</div>${x.notes?`<div>${esc(x.notes)}</div>`:''}</div>`).join('')||'<div class="empty">Todavía no hay registros.</div>'}</div>`}
+function stats(){let options=db.colonies.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');return `<div class="section-head"><h2>Estadísticas</h2><button class="btn" data-action="growth">＋ Recuento</button></div><div class="card"><label><b>Colonia</b></label><select id="chartColony">${options}</select><div style="height:10px"></div><canvas id="chart" width="700" height="360"></canvas><p class="muted">El gráfico se actualiza cada vez que registras un nuevo recuento.</p></div><div class="section-head"><h2>Comparativa actual</h2></div><div class="grid">${db.colonies.filter(c=>typeof c.workers==='number').sort((a,b)=>b.workers-a.workers).map(c=>`<div class="card"><b>${esc(c.name)}</b><div class="muted">${esc(c.species)}</div><div style="font-size:24px;font-weight:800">${c.workers} obreras</div></div>`).join('')}</div>`}
+function more(){return `<div class="section-head"><h2>Más</h2></div><div class="grid"><div class="card"><h3>☁️ Copias de seguridad</h3><div class="backup"><button class="btn" data-action="export">Exportar copia completa</button><label class="btn secondary" style="text-align:center">Importar copia<input id="importFile" type="file" accept="application/json" hidden></label><button class="btn secondary" data-action="share">Compartir copia</button><p class="muted">La copia incluye colonias, alimentaciones, eventos, recuentos, tareas y fotografías.</p></div></div><div class="card"><h3>🪲 Modo terrario</h3>${(db.fauna||[]).map(f=>`<div style="padding:8px 0;border-bottom:1px solid var(--line)"><b>${esc(f.name)}</b><div class="muted">${esc(f.type)} · ${esc(f.location)}</div></div>`).join('')}</div><div class="card"><h3>⏰ Recordatorios</h3>${(db.tasks||[]).map(t=>`<div class="switchrow" style="padding:8px 0"><div><b>${esc(t.title)}</b><div class="muted">${esc(t.dueDate||'Sin fecha')}</div></div><button class="btn secondary small" data-task="${esc(t.id)}">${t.status==='Completada'?'Reabrir':'Completar'}</button></div>`).join('')||'<p class="muted">Sin recordatorios.</p>'}<button class="btn" data-action="task">＋ Recordatorio</button></div><div class="card"><h3>Datos</h3><button class="btn danger" data-action="reset">Restaurar datos iniciales</button></div></div>`}
+function colonyName(id){return db.colonies.find(c=>String(c.id)===String(id))?.name||'General'}
+function bind(){document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{route=b.dataset.go;render()});document.querySelectorAll('[data-colony]').forEach(b=>{b.onclick=()=>openColony(b.dataset.colony);loadCover(b.dataset.colony)});document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>action(b.dataset.action));document.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>{let t=db.tasks.find(x=>x.id===b.dataset.task);t.status=t.status==='Completada'?'Pendiente':'Completada';save();render()});if($('#importFile'))$('#importFile').onchange=e=>importBackup(e.target.files[0]);if($('#chartColony')){$('#chartColony').onchange=drawChart;setTimeout(drawChart)}db.colonies.slice(0,5).forEach(c=>loadCover(c.id));}
+function openSheet(html){$('#sheetBody').innerHTML=html;$('#sheet').classList.add('open');$('#sheet').onclick=e=>{if(e.target.id==='sheet')closeSheet()}}
+function closeSheet(){$('#sheet').classList.remove('open')}
+function colonySelect(sel=''){return db.colonies.map(c=>`<option value="${esc(c.id)}" ${String(c.id)===String(sel)?'selected':''}>${esc(c.name)} — ${esc(c.species||'sin identificar')}</option>`).join('')}
+function action(a){if(a==='feeding')feedingForm();if(a==='event')eventForm();if(a==='photo')photoForm();if(a==='growth')growthForm();if(a==='task')taskForm();if(a==='export')exportBackup(false);if(a==='share')exportBackup(true);if(a==='reset'&&confirm('¿Restaurar los datos iniciales? Se perderán los cambios locales.')){localStorage.removeItem('antelmo.v3');location.reload()}}
+function feedingForm(cid=''){openSheet(`<h2>🐜 Registrar alimentación</h2><form class="form" id="f"><label>Colonia<select name="colonyId">${colonySelect(cid)}</select></label><div class="row"><label>Fecha<input type="date" name="date" value="${today()}" required></label><label>Tipo<select name="type"><option>Semillas</option><option>Proteína</option><option>Dulce</option><option>Líquido</option><option>Otros</option></select></label></div><label>Alimento<input name="food" required placeholder="Semillas de chía"></label><label>Cantidad<input name="quantity" placeholder="Pequeña cantidad"></label><label>Aceptación<select name="accepted"><option value="">Sin comprobar</option><option>Sí</option><option>No</option><option>Parcial</option></select></label><label>Notas<textarea name="notes"></textarea></label><button class="btn">Guardar alimentación</button></form>`);$('#f').onsubmit=e=>{e.preventDefault();let o=Object.fromEntries(new FormData(e.target));o.id=uid('feeding');db.feedings.push(o);db.events.push({id:uid('evt'),colonyId:o.colonyId,date:o.date,type:'Alimentación',title:o.food,notes:o.notes});save();closeSheet();toast('Alimentación guardada');render()}}
+function eventForm(cid=''){openSheet(`<h2>📅 Registrar evento</h2><form class="form" id="f"><label>Colonia<select name="colonyId"><option value="">General</option>${colonySelect(cid)}</select></label><div class="row"><label>Fecha<input type="date" name="date" value="${today()}" required></label><label>Tipo<select name="type"><option>Observación</option><option>Mudanza</option><option>Ampliación</option><option>Limpieza</option><option>Nacimiento</option><option>Fallecimiento</option><option>Riego</option><option>Otro</option></select></label></div><label>Título<input name="title" required></label><label>Notas<textarea name="notes"></textarea></label><button class="btn">Guardar evento</button></form>`);$('#f').onsubmit=e=>{e.preventDefault();let o=Object.fromEntries(new FormData(e.target));o.id=uid('evt');db.events.push(o);save();closeSheet();toast('Evento guardado');render()}}
+function growthForm(cid=''){openSheet(`<h2>📈 Nuevo recuento</h2><form class="form" id="f"><label>Colonia<select name="colonyId">${colonySelect(cid)}</select></label><label>Fecha<input type="date" name="date" value="${today()}" required></label><div class="row"><label>Obreras<input type="number" min="0" name="workers"></label><label>Huevos<input type="number" min="0" name="eggs"></label></div><div class="row"><label>Larvas<input type="number" min="0" name="larvae"></label><label>Pupas<input type="number" min="0" name="pupae"></label></div><label>Notas<textarea name="notes"></textarea></label><button class="btn">Guardar recuento</button></form>`);$('#f').onsubmit=e=>{e.preventDefault();let o=Object.fromEntries(new FormData(e.target));['workers','eggs','larvae','pupae'].forEach(k=>o[k]=o[k]===''?null:+o[k]);o.id=uid('growth');db.growthRecords=db.growthRecords||[];db.growthRecords.push(o);let c=db.colonies.find(x=>String(x.id)===String(o.colonyId));if(c&&o.workers!=null)c.workers=o.workers;if(c){c.brood=c.brood||{};['eggs','larvae','pupae'].forEach(k=>{if(o[k]!=null)c.brood[k]=o[k]})}save();closeSheet();toast('Recuento guardado');render()}}
+function taskForm(){openSheet(`<h2>⏰ Nuevo recordatorio</h2><form class="form" id="f"><label>Colonia<select name="colonyId"><option value="">General</option>${colonySelect()}</select></label><label>Título<input name="title" required></label><div class="row"><label>Fecha<input type="date" name="dueDate"></label><label>Prioridad<select name="priority"><option>Normal</option><option>Alta</option><option>Baja</option></select></label></div><label>Notas<textarea name="notes"></textarea></label><button class="btn">Guardar recordatorio</button></form>`);$('#f').onsubmit=e=>{e.preventDefault();let o=Object.fromEntries(new FormData(e.target));o.id=uid('task');o.status='Pendiente';db.tasks.push(o);save();closeSheet();toast('Recordatorio guardado');render()}}
+function photoForm(cid=''){openSheet(`<h2>📷 Añadir fotografía</h2><form class="form" id="f"><label>Colonia<select name="colonyId">${colonySelect(cid)}</select></label><label>Foto<input type="file" name="photo" accept="image/*" capture="environment" required></label><label>Fecha<input type="date" name="date" value="${today()}"></label><label>Nota<textarea name="notes"></textarea></label><label><input type="checkbox" name="cover"> Usar como portada</label><button class="btn">Guardar fotografía</button></form>`);$('#f').onsubmit=async e=>{e.preventDefault();let fd=new FormData(e.target),file=fd.get('photo');if(!file?.size)return;let rec={id:uid('photo'),colonyId:fd.get('colonyId'),date:fd.get('date'),notes:fd.get('notes'),cover:fd.get('cover')==='on',blob:file};if(rec.cover)await clearCovers(rec.colonyId);await photoPut(rec);db.events.push({id:uid('evt'),colonyId:rec.colonyId,date:rec.date,type:'Fotografía',title:'Nueva fotografía',notes:rec.notes});save();closeSheet();toast('Fotografía guardada');render()}}
+async function openColony(id){selected=id;let c=db.colonies.find(x=>String(x.id)===String(id)),photos=await photosByColony(id),feeds=db.feedings.filter(x=>String(x.colonyId)===String(id)).sort((a,b)=>b.date.localeCompare(a.date));openSheet(`<div class="section-head"><div><h2>${esc(c.name)}</h2><div class="muted"><i>${esc(c.species||'Sin identificar')}</i></div></div><span class="status">${esc(c.status)}</span></div><div class="actions"><button class="btn" id="addPhoto">📷 Foto</button><button class="btn secondary" id="addFeed">🍽 Comida</button><button class="btn secondary" id="addGrowth">📈 Recuento</button></div><div class="section-head"><h2>Resumen</h2></div><div class="card"><b>${esc(c.workers??'—')} obreras · ${esc(c.queens??'—')} reina(s)</b><p>${esc(c.location||'')}</p><p class="muted">${esc(c.notes||'')}</p>${c.brood?`<span class="badge">🥚 ${esc(c.brood.eggs??'—')}</span><span class="badge">Larvas ${esc(c.brood.larvae??'—')}</span><span class="badge">Pupas ${esc(c.brood.pupae??'—')}</span>`:''}</div><div class="section-head"><h2>Galería</h2><span class="muted">${photos.length} fotos</span></div><div class="gallery">${photos.map(p=>`<div class="photo"><img src="${URL.createObjectURL(p.blob)}"><button data-del-photo="${p.id}">×</button></div>`).join('')||'<div class="empty">Aún no hay fotos.</div>'}</div><div class="section-head"><h2>Alimentación</h2></div><div class="grid">${feeds.slice(0,8).map(f=>`<div class="card"><b>${esc(f.food)}</b><div class="muted">${esc(f.date)} · ${esc(f.type)}</div><div>${esc(f.quantity||f.notes||'')}</div></div>`).join('')||'<div class="empty">Sin alimentaciones registradas.</div>'}</div>`);$('#addPhoto').onclick=()=>photoForm(id);$('#addFeed').onclick=()=>feedingForm(id);$('#addGrowth').onclick=()=>growthForm(id);document.querySelectorAll('[data-del-photo]').forEach(b=>b.onclick=async()=>{if(confirm('¿Eliminar esta foto?')){await photoDelete(b.dataset.delPhoto);openColony(id)}})}
+function drawChart(){let id=$('#chartColony')?.value,canvas=$('#chart');if(!canvas)return;let ctx=canvas.getContext('2d'),arr=(db.growthRecords||[]).filter(x=>String(x.colonyId)===String(id)&&x.workers!=null).sort((a,b)=>a.date.localeCompare(b.date));ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.strokeStyle='#dce5df';ctx.lineWidth=1;for(let i=0;i<5;i++){let y=40+i*65;ctx.beginPath();ctx.moveTo(55,y);ctx.lineTo(670,y);ctx.stroke()}if(!arr.length){ctx.fillStyle='#6a756f';ctx.font='20px sans-serif';ctx.fillText('Sin recuentos todavía',230,185);return}let max=Math.max(...arr.map(x=>x.workers),1),min=Math.min(...arr.map(x=>x.workers),0);ctx.strokeStyle='#174c3c';ctx.lineWidth=5;ctx.beginPath();arr.forEach((p,i)=>{let x=65+(arr.length===1?300:i*(590/(arr.length-1))),y=310-((p.workers-min)/(max-min||1))*240;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();ctx.fillStyle='#174c3c';arr.forEach((p,i)=>{let x=65+(arr.length===1?300:i*(590/(arr.length-1))),y=310-((p.workers-min)/(max-min||1))*240;ctx.beginPath();ctx.arc(x,y,7,0,Math.PI*2);ctx.fill();ctx.fillStyle='#1d2b25';ctx.font='15px sans-serif';ctx.fillText(String(p.workers),x-8,y-14);ctx.fillText(p.date.slice(5),x-18,338);ctx.fillStyle='#174c3c'})}
+async function exportBackup(share=false){let photos=await photoAll();let media=[];for(const p of photos)media.push({...p,blob:undefined,dataUrl:await blobToDataURL(p.blob),mime:p.blob.type});let backup={...db,mediaBackup:media,metadata:{...(db.metadata||{}),schemaVersion:'3.0.0',exportedAt:new Date().toISOString()}};let blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'}),file=new File([blob],`ANTELMO-copia-${today()}.json`,{type:'application/json'});if(share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'Copia de ANTELMO'})}else{let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}toast('Copia creada')}
+async function importBackup(file){if(!file)return;try{let x=JSON.parse(await file.text());if(!Array.isArray(x.colonies))throw Error();db=x;let media=x.mediaBackup||[];delete db.mediaBackup;for(const p of media){let blob=await fetch(p.dataUrl).then(r=>r.blob());await photoPut({...p,blob,dataUrl:undefined})}save();toast('Copia importada');render()}catch{alert('La copia no es válida')}}
+const blobToDataURL=b=>new Promise(r=>{let fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(b)});
+let idb;function initIDB(){let req=indexedDB.open('antelmo-media',1);req.onupgradeneeded=e=>e.target.result.createObjectStore('photos',{keyPath:'id'});req.onsuccess=e=>idb=e.target.result}
+const store=(mode='readonly')=>idb.transaction('photos',mode).objectStore('photos');const photoPut=p=>new Promise((r,j)=>{let q=store('readwrite').put(p);q.onsuccess=r;q.onerror=j});const photoDelete=id=>new Promise(r=>{let q=store('readwrite').delete(id);q.onsuccess=r});const photoAll=()=>new Promise(r=>{let q=store().getAll();q.onsuccess=()=>r(q.result||[])});const photosByColony=async id=>(await photoAll()).filter(p=>String(p.colonyId)===String(id)).sort((a,b)=>b.date.localeCompare(a.date));async function loadCover(id){if(!idb)return;let p=(await photosByColony(id)).find(x=>x.cover)||(await photosByColony(id))[0],el=$(`#cover-${CSS.escape(String(id))}`);if(p&&el)el.innerHTML=`<img src="${URL.createObjectURL(p.blob)}">`}async function clearCovers(id){for(let p of await photosByColony(id)){if(p.cover){p.cover=false;await photoPut(p)}}}
+$('#fab').onclick=()=>openSheet(`<h2>Nuevo registro</h2><div class="grid"><button class="btn" id="qfeed">🍽 Alimentación</button><button class="btn" id="qevent">📅 Evento</button><button class="btn" id="qphoto">📷 Fotografía</button><button class="btn" id="qgrowth">📈 Recuento</button><button class="btn secondary" id="qtask">⏰ Recordatorio</button></div>`),document.addEventListener('click',e=>{if(e.target.id==='qfeed')feedingForm();if(e.target.id==='qevent')eventForm();if(e.target.id==='qphoto')photoForm();if(e.target.id==='qgrowth')growthForm();if(e.target.id==='qtask')taskForm()});boot();

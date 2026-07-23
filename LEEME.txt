@@ -1,0 +1,12 @@
+ANTELMO PWA v3
+
+Incluye:
+- Fotos por colonia desde cámara o Fototeca (guardadas en IndexedDB).
+- Alimentaciones y línea temporal de eventos.
+- Recuentos y gráficos de crecimiento.
+- Recordatorios/tareas.
+- Modo terrario.
+- Exportación, importación y compartir copias completas, incluidas fotos.
+- Funcionamiento sin conexión mediante service worker.
+
+Publicación recomendada: sustituir los archivos del repositorio GitHub Pages por el contenido de esta carpeta. Después, abrir la web en Safari y usar Compartir > Añadir a pantalla de inicio.

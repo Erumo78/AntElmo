@@ -1,0 +1,669 @@
+{
+  "colonies": [
+    {
+      "id": 1,
+      "name": "Colonia 1",
+      "species": "Messor barbarus",
+      "workers": 150,
+      "queens": 1,
+      "status": "Crecimiento",
+      "founded": "2023-07-01",
+      "location": "Nido de tierra + 4 bloques de hormiguero + caja forrajeo + hormiguero pequeño, unido por tubos",
+      "notes": "Colonia con mayor población y abundante cría.",
+      "commonName": null,
+      "origin": "Colonia previa",
+      "queenStatus": "Presente",
+      "brood": {
+        "eggs": null,
+        "larvae": null,
+        "pupae": null,
+        "notes": null
+      },
+      "setup": {
+        "nestType": "Nido de tierra + 4 bloques de hormiguero + caja forrajeo + hormiguero pequeño, unido por tubos",
+        "foragingArea": "Incluida",
+        "redCover": null,
+        "antiEscape": null,
+        "springtails": true
+      },
+      "care": {
+        "humidity": null,
+        "temperature": null,
+        "lastWatering": null,
+        "lastCleaning": null,
+        "hibernation": null
+      },
+      "media": [],
+      "tags": [],
+      "createdAt": "2023-07-01",
+      "updatedAt": "2026-07-23"
+    },
+    {
+      "id": 2,
+      "name": "Colonia 2",
+      "species": "Messor barbarus",
+      "workers": 100,
+      "queens": 1,
+      "status": "Crecimiento",
+      "founded": "2024-07-01",
+      "location": "Tubo y hormiguero acrílico dentro de caja grande de forrajeo ",
+      "notes": "La reina y la cría permanecen en el tubo.",
+      "commonName": null,
+      "origin": "Colonia previa",
+      "queenStatus": "Presente",
+      "brood": {
+        "eggs": null,
+        "larvae": null,
+        "pupae": null,
+        "notes": null
+      },
+      "setup": {
+        "nestType": "Tubo y hormiguero acrílico dentro de caja grande de forrajeo ",
+        "foragingArea": "Incluida",
+        "redCover": null,
+        "antiEscape": null,
+        "springtails": true
+      },
+      "care": {
+        "humidity": null,
+        "temperature": null,
+        "lastWatering": null,
+        "lastCleaning": null,
+        "hibernation": null
+      },
+      "media": [],
+      "tags": [],
+      "createdAt": "2024-07-01",
+      "updatedAt": "2026-07-23"
+    },
+    {
+      "id": 3,
+      "name": "Colonia 3",
+      "species": "Messor barbarus",
+      "workers": 25,
+      "queens": 1,
+      "status": "Crecimiento",
+      "founded": "2026-07-10",
+      "location": "Hormiguero acrílico",
+      "notes": "Añadido hormiguero el 21/07/2026",
+      "commonName": null,
+      "origin": "Compra",
+      "queenStatus": "Presente",
+      "brood": {
+        "eggs": null,
+        "larvae": null,
+        "pupae": null,
+        "notes": null
+      },
+      "setup": {
+        "nestType": "Hormiguero acrílico",
+        "foragingArea": null,
+        "redCover": true,
+        "antiEscape": "Mineral",
+        "springtails": null
+      },
+      "care": {
+        "humidity": null,
+        "temperature": null,
+        "lastWatering": null,
+        "lastCleaning": null,
+        "hibernation": null
+      },
+      "media": [],
+      "tags": [],
+      "createdAt": "2026-07-10",
+      "updatedAt": "2026-07-23"
+    },
+    {
+      "id": 4,
+      "name": "Colonia 4",
+      "species": "Lasius niger",
+      "workers": 12,
+      "queens": 1,
+      "status": "Estable",
+      "founded": "2026-07-16",
+      "location": "Tubo de ensayo + minicaja forrajeo",
+      "notes": "Añadido caja el 22/07/2026",
+      "commonName": null,
+      "origin": "Compra",
+      "queenStatus": "Presente",
+      "brood": {
+        "eggs": null,
+        "larvae": null,
+        "pupae": null,
+        "notes": null
+      },
+      "setup": {
+        "nestType": "Tubo de ensayo + minicaja forrajeo",
+        "foragingArea": "Incluida",
+        "redCover": null,
+        "antiEscape": null,
+        "springtails": null
+      },
+      "care": {
+        "humidity": null,
+        "temperature": null,
+        "lastWatering": null,
+        "lastCleaning": null,
+        "hibernation": null
+      },
+      "media": [],
+      "tags": [],
+      "createdAt": "2026-07-16",
+      "updatedAt": "2026-07-23"
+    },
+    {
+      "id": 5,
+      "name": "Colonia 5",
+      "species": "Lasius flavus",
+      "workers": 12,
+      "queens": 1,
+      "status": "Estable",
+      "founded": "2026-07-14",
+      "location": "Tubo de ensayo + minicaja forrajeo",
+      "notes": "Hormiga ORO. \nAñadido caja 22/07/2026",
+      "commonName": "Hormiga oro",
+      "origin": "Compra",
+      "queenStatus": "Presente",
+      "brood": {
+        "eggs": null,
+        "larvae": null,
+        "pupae": null,
+        "notes": null
+      },
+      "setup": {
+        "nestType": "Tubo de ensayo + minicaja forrajeo",
+        "foragingArea": "Incluida",
+        "redCover": null,
+        "antiEscape": null,
+        "springtails": null
+      },
+      "care": {
+        "humidity": null,
+        "temperature": null,
+        "lastWatering": null,
+        "lastCleaning": null,
+        "hibernation": null
+      },
+      "media": [],
+      "tags": [],
+      "createdAt": "2026-07-14",
+      "updatedAt": "2026-07-23"
+    },
+    {
+      "id": 6,
+      "name": "Colonia 6",
+      "species": "Crematogaster scutellaris",
+      "workers": 7,
+      "queens": 1,
+      "status": "Estable",
+      "founded": "2026-07-16",
+      "location": "Tubo de ensayo + minicaja forrajeo",
+      "notes": "Añadido caja el 21/07/2026",
+      "commonName": null,
+      "origin": "Compra",
+      "queenStatus": "Presente",
+      "brood": {
+        "eggs": null,
+        "larvae": null,
+        "pupae": null,
+        "notes": null
+      },
+      "setup": {
+        "nestType": "Tubo de ensayo + minicaja forrajeo",
+        "foragingArea": "Incluida",
+        "redCover": null,
+        "antiEscape": null,
+        "springtails": null
+      },
+      "care": {
+        "humidity": null,
+        "temperature": null,
+        "lastWatering": null,
+        "lastCleaning": null,
+        "hibernation": null
+      },
+      "media": [],
+      "tags": [],
+      "createdAt": "2026-07-16",
+      "updatedAt": "2026-07-23"
+    },
+    {
+      "id": 7,
+      "name": "Colonia 7",
+      "species": "Camponotus barbaricus",
+      "workers": 5,
+      "queens": 1,
+      "status": "Estable",
+      "founded": "2026-07-21",
+      "location": "Tubo de ensayo + minicaja forrajeo",
+      "notes": "Añadido caja el 22/07/2026",
+      "brood": {
+        "eggs": 4,
+        "larvae": null,
+        "pupae": null,
+        "notes": "Llegó con 4 huevos."
+      },
+      "commonName": null,
+      "origin": "Compra",
+      "queenStatus": "Presente",
+      "setup": {
+        "nestType": "Tubo de ensayo + minicaja forrajeo",
+        "foragingArea": "Incluida",
+        "redCover": null,
+        "antiEscape": null,
+        "springtails": null
+      },
+      "care": {
+        "humidity": null,
+        "temperature": null,
+        "lastWatering": null,
+        "lastCleaning": null,
+        "hibernation": null
+      },
+      "media": [],
+      "tags": [],
+      "createdAt": "2026-07-21",
+      "updatedAt": "2026-07-23"
+    },
+    {
+      "id": 8,
+      "name": "Colonia 8",
+      "species": "Camponotus ligniperdus",
+      "commonName": "Hormiga gigante",
+      "workers": 0,
+      "workersEstimate": false,
+      "queens": 1,
+      "queenStatus": "Pedido; llegada pendiente",
+      "status": "En tránsito",
+      "founded": null,
+      "expectedArrival": "2026-07-24",
+      "origin": "Pedido a Anthouse",
+      "location": "Pendiente de llegada",
+      "notes": "Se espera una reina sola con huevos, pero el contenido exacto debe confirmarse al recibirla.",
+      "brood": {
+        "eggs": null,
+        "larvae": null,
+        "pupae": null,
+        "notes": "Se esperan huevos, todavía no confirmado."
+      },
+      "setup": {
+        "nestType": "Tubo de ensayo previsto",
+        "foragingArea": null,
+        "redCover": null,
+        "antiEscape": null,
+        "springtails": null
+      },
+      "care": {
+        "humidity": null,
+        "temperature": null,
+        "lastWatering": null,
+        "lastCleaning": null,
+        "hibernation": null
+      },
+      "media": [],
+      "tags": [
+        "pedido",
+        "pendiente de llegada"
+      ],
+      "createdAt": "2026-07-23",
+      "updatedAt": "2026-07-23"
+    },
+    {
+      "id": "X",
+      "key": "X",
+      "name": "Colonia X",
+      "species": null,
+      "commonName": null,
+      "workers": 40,
+      "workersEstimate": true,
+      "queens": 0,
+      "queenStatus": "No localizada",
+      "status": "Silvestre / pendiente de resolución",
+      "founded": null,
+      "origin": "Nido silvestre localizado tras el rodapié del salón",
+      "location": "Rodapié del salón; parte de las obreras recogidas en una caja",
+      "notes": "Se observaron aproximadamente 40 obreras recogidas y algunas más forrajeando. No se ha confirmado la especie ni la presencia de la reina.",
+      "brood": {
+        "eggs": null,
+        "larvae": null,
+        "pupae": null,
+        "notes": "No confirmada"
+      },
+      "setup": {
+        "nestType": "Nido estructural en vivienda",
+        "foragingArea": "Caja temporal para obreras recogidas",
+        "redCover": null,
+        "antiEscape": null,
+        "springtails": null
+      },
+      "care": {
+        "humidity": null,
+        "temperature": null,
+        "lastWatering": null,
+        "lastCleaning": null,
+        "hibernation": null
+      },
+      "media": [],
+      "tags": [
+        "silvestre",
+        "sin reina confirmada",
+        "no numerada"
+      ],
+      "createdAt": "2026-07-23",
+      "updatedAt": "2026-07-23"
+    }
+  ],
+  "feedings": [
+    {
+      "id": 1,
+      "colonyId": 1,
+      "type": "Semillas",
+      "food": "Semillas de chía",
+      "date": "2026-07-20",
+      "notes": "Pequeña cantidad",
+      "quantity": null,
+      "accepted": null,
+      "removedAt": null,
+      "createdAt": "2026-07-20"
+    },
+    {
+      "id": 2,
+      "colonyId": 1,
+      "type": "Dulce",
+      "food": "Néctar azucarado",
+      "date": "2026-07-20",
+      "notes": "Algodón empapado",
+      "quantity": null,
+      "accepted": null,
+      "removedAt": null,
+      "createdAt": "2026-07-20"
+    },
+    {
+      "id": 3,
+      "colonyId": 3,
+      "type": "Semillas",
+      "food": "Semillas de amapola",
+      "date": "2026-07-18",
+      "notes": "Pequeña cantidad",
+      "quantity": null,
+      "accepted": null,
+      "removedAt": null,
+      "createdAt": "2026-07-18"
+    },
+    {
+      "id": 4,
+      "colonyId": 1,
+      "type": "Proteína",
+      "food": "Medio grillo disecado",
+      "date": "2026-07-16",
+      "notes": "Proteína",
+      "quantity": null,
+      "accepted": null,
+      "removedAt": null,
+      "createdAt": "2026-07-16"
+    }
+  ],
+  "events": [
+    {
+      "id": "evt-20260721-c3-move",
+      "colonyId": 3,
+      "type": "Mudanza",
+      "date": "2026-07-21",
+      "title": "Instalación en hormiguero acrílico",
+      "notes": "Se abrió únicamente la celda pequeña y se añadió agua al depósito."
+    },
+    {
+      "id": "evt-20260722-c4-foraging",
+      "colonyId": 4,
+      "type": "Ampliación",
+      "date": "2026-07-22",
+      "title": "Añadida minicaja de forrajeo",
+      "notes": null
+    },
+    {
+      "id": "evt-20260722-c5-foraging",
+      "colonyId": 5,
+      "type": "Ampliación",
+      "date": "2026-07-22",
+      "title": "Añadida minicaja de forrajeo",
+      "notes": null
+    },
+    {
+      "id": "evt-20260721-c6-foraging",
+      "colonyId": 6,
+      "type": "Ampliación",
+      "date": "2026-07-21",
+      "title": "Añadida minicaja de forrajeo",
+      "notes": null
+    },
+    {
+      "id": "evt-20260722-c7-foraging",
+      "colonyId": 7,
+      "type": "Ampliación",
+      "date": "2026-07-22",
+      "title": "Añadida minicaja de forrajeo",
+      "notes": null
+    }
+  ],
+  "observations": [],
+  "tasks": [
+    {
+      "id": "task-confirm-c8-arrival",
+      "colonyId": 8,
+      "title": "Confirmar llegada y contenido de la colonia 8",
+      "dueDate": "2026-07-24",
+      "status": "Pendiente",
+      "priority": "Alta",
+      "notes": "Registrar obreras, huevos, larvas, pupas, estado de la reina y fotografías."
+    },
+    {
+      "id": "task-identify-x",
+      "colonyId": "X",
+      "title": "Confirmar especie y localizar reina de la Colonia X",
+      "dueDate": null,
+      "status": "Pendiente",
+      "priority": "Alta",
+      "notes": "No dar por confirmada la especie hasta obtener fotografías diagnósticas o localizar la reina."
+    }
+  ],
+  "inventory": [
+    {
+      "id": "inv-tubes",
+      "category": "Alojamiento",
+      "name": "Tubos de ensayo",
+      "quantity": null,
+      "unit": "unidades",
+      "notes": "Disponibles para futuras reinas."
+    },
+    {
+      "id": "inv-chia",
+      "category": "Alimento",
+      "name": "Semillas de chía",
+      "quantity": null,
+      "unit": null,
+      "notes": null
+    },
+    {
+      "id": "inv-poppy",
+      "category": "Alimento",
+      "name": "Semillas de amapola",
+      "quantity": null,
+      "unit": null,
+      "notes": null
+    },
+    {
+      "id": "inv-nectar",
+      "category": "Alimento",
+      "name": "Néctar alimenticio",
+      "quantity": null,
+      "unit": null,
+      "notes": null
+    },
+    {
+      "id": "inv-crickets",
+      "category": "Alimento",
+      "name": "Grillos disecados",
+      "quantity": null,
+      "unit": null,
+      "notes": null
+    },
+    {
+      "id": "inv-antiescape",
+      "category": "Mantenimiento",
+      "name": "Antifugas mineral",
+      "quantity": null,
+      "unit": null,
+      "notes": null
+    }
+  ],
+  "fauna": [
+    {
+      "id": "blas",
+      "name": "Blas",
+      "type": "Escarabajo",
+      "species": "Blaps sp.",
+      "status": "Activo",
+      "location": "Terrario principal"
+    },
+    {
+      "id": "sanson",
+      "name": "Sansón",
+      "type": "Escarabajo tenebriónido",
+      "species": null,
+      "status": "Activo; última observación no confirmada",
+      "location": "Terrario principal"
+    },
+    {
+      "id": "tuna",
+      "name": "Tuna",
+      "type": "Escarabajo tenebriónido",
+      "species": null,
+      "status": "Activo",
+      "location": "Terrario principal",
+      "notes": "Le falta la antena izquierda."
+    },
+    {
+      "id": "chin",
+      "name": "Chin",
+      "type": "Chinche roja y negra",
+      "species": null,
+      "status": "Activo",
+      "location": "Terrario principal"
+    }
+  ],
+  "appConfig": {
+    "schemaVersion": "3.0.0",
+    "appName": "ANTELMO",
+    "locale": "es-ES",
+    "dateFormat": "YYYY-MM-DD",
+    "features": {
+      "statistics": true,
+      "events": true,
+      "tasks": true,
+      "inventory": true,
+      "media": true,
+      "fauna": true,
+      "backups": true
+    }
+  },
+  "metadata": {
+    "schemaVersion": "3.0.0",
+    "exportedAt": "2026-07-23",
+    "sourceFile": "antelmo-copia.json",
+    "reviewed": true,
+    "notes": "Versión ampliada y compatible con crecimiento futuro. Los valores desconocidos se mantienen como null."
+  },
+  "growthRecords": [
+    {
+      "id": "growth-1-20260723",
+      "colonyId": 1,
+      "date": "2026-07-23",
+      "workers": 150,
+      "eggs": null,
+      "larvae": null,
+      "pupae": null,
+      "notes": "Registro inicial importado"
+    },
+    {
+      "id": "growth-2-20260723",
+      "colonyId": 2,
+      "date": "2026-07-23",
+      "workers": 100,
+      "eggs": null,
+      "larvae": null,
+      "pupae": null,
+      "notes": "Registro inicial importado"
+    },
+    {
+      "id": "growth-3-20260723",
+      "colonyId": 3,
+      "date": "2026-07-23",
+      "workers": 25,
+      "eggs": null,
+      "larvae": null,
+      "pupae": null,
+      "notes": "Registro inicial importado"
+    },
+    {
+      "id": "growth-4-20260723",
+      "colonyId": 4,
+      "date": "2026-07-23",
+      "workers": 12,
+      "eggs": null,
+      "larvae": null,
+      "pupae": null,
+      "notes": "Registro inicial importado"
+    },
+    {
+      "id": "growth-5-20260723",
+      "colonyId": 5,
+      "date": "2026-07-23",
+      "workers": 12,
+      "eggs": null,
+      "larvae": null,
+      "pupae": null,
+      "notes": "Registro inicial importado"
+    },
+    {
+      "id": "growth-6-20260723",
+      "colonyId": 6,
+      "date": "2026-07-23",
+      "workers": 7,
+      "eggs": null,
+      "larvae": null,
+      "pupae": null,
+      "notes": "Registro inicial importado"
+    },
+    {
+      "id": "growth-7-20260723",
+      "colonyId": 7,
+      "date": "2026-07-23",
+      "workers": 5,
+      "eggs": 4,
+      "larvae": null,
+      "pupae": null,
+      "notes": "Registro inicial importado"
+    },
+    {
+      "id": "growth-8-20260723",
+      "colonyId": 8,
+      "date": "2026-07-23",
+      "workers": 0,
+      "eggs": null,
+      "larvae": null,
+      "pupae": null,
+      "notes": "Registro inicial importado"
+    },
+    {
+      "id": "growth-X-20260723",
+      "colonyId": "X",
+      "date": "2026-07-23",
+      "workers": 40,
+      "eggs": null,
+      "larvae": null,
+      "pupae": null,
+      "notes": "Registro inicial importado"
+    }
+  ]
+}
