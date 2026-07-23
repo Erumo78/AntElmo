@@ -1,20 +1,20 @@
-ANTELMO V5.0 — ANTDEX COMPLETA
+ANTELMO V6.0
 
 NOVEDADES
-- AntDex enciclopédica con nivel y progreso por colonia.
-- Fichas editables de especie: distribución, tamaño, dificultad, temperatura, humedad, dieta y curiosidades.
-- Línea temporal automática con fundación, alimentación, eventos, recuentos y AntScan.
-- Sistema de logros y progreso de colección.
-- AntScan asistido local con fotografía, revisión guiada e informe de recomendaciones.
-- Botón para compartir una fotografía desde iPhone y solicitar una consulta visual externa.
-- Rangos AntDex en la sección Datos.
-- Álbum V4.3 conservado: Fototeca, cámara, selección múltiple, portada, edición y visor.
+- Mesa de trabajo con tarjetas vivas y estado de cada colonia.
+- Analítica ampliada para obreras, huevos, larvas y pupas.
+- Calendario inteligente con sugerencias de alimentación y seguimiento visual.
+- Modo Terrario con historial para cada habitante.
+- Laboratorio multimedia: fotos, vídeos, búsqueda y comparación Antes/Después.
+- AntDex, fichas de especie, logros, evolución y AntScan de V5.
+- Sincronización portátil mediante copias completas compartibles con Archivos/iCloud/Drive.
+- Compatible con los datos locales de V4 y V5.
 
-ACTUALIZACIÓN
-1. Exporta una copia de seguridad desde Más.
-2. Sustituye todos los archivos del repositorio por estos.
-3. Abre https://erumo78.github.io/AntElmo/?v=500 en Safari.
+INSTALACIÓN
+1. Exporta una copia desde la versión actual.
+2. Sustituye todos los archivos del repositorio.
+3. Abre https://erumo78.github.io/AntElmo/?v=600 una vez en Safari.
 4. Cierra y vuelve a abrir la PWA instalada.
 
-DATOS
-La versión continúa utilizando localStorage "antelmo.v4" e IndexedDB "antelmo-media", por lo que conserva los datos actuales.
+NOTA
+La identificación automática real mediante IA y la sincronización continua entre dispositivos requieren un servicio externo y autenticación. V6 conserva la revisión AntScan y el uso de Compartir con ChatGPT, sin guardar claves ni enviar datos automáticamente.
