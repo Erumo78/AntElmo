@@ -153,3 +153,23 @@
   .v73-documentary-hero{grid-template-columns:1fr;padding:22px}.v73-documentary-hero>span{width:76px;height:76px;font-size:40px}.v73-documentary-hero h2{font-size:28px}
   .v73-documentary-metrics{grid-template-columns:1fr 1fr}
 }
+
+/* V7.3.3 — búsqueda y organización compacta de colonias */
+.colony-search{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:7px;padding:7px 8px;margin:12px 0}
+.colony-search>span{padding-left:6px;color:var(--muted);font-size:24px}
+.colony-search input{min-width:0;border:0;outline:0;background:transparent;color:var(--ink);padding:10px 4px}
+.colony-search .button{padding:9px 12px}
+.colony-search-clear{width:36px;height:36px;border:0;border-radius:12px;background:var(--surface2);color:var(--muted);font-size:20px}
+.colony-organizer-toggle{display:none;width:100%;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;margin:8px 0 6px;padding:11px 13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-align:left}
+.colony-organizer-toggle>span:first-child{font-size:20px}
+.colony-organizer-toggle b,.colony-organizer-toggle small{display:block}
+.colony-organizer-toggle small{margin-top:2px;color:var(--muted);font-size:9px}
+.colony-organizer-toggle i{font-style:normal;color:var(--green);font-size:18px}
+
+@media(max-width:620px){
+  .colony-search .button b{display:none}
+  .colony-search .button:after{content:"⌕";font-size:18px}
+  .colony-organizer-toggle{display:grid}
+  .colony-organizer{display:none;grid-template-columns:1fr 1fr;margin-top:6px}
+  .colony-organizer.is-open{display:grid}
+}

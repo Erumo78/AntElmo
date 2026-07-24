@@ -44,6 +44,8 @@ function ensureRoadmapData(){
   cfg.dashboardHidden ||= [];
   cfg.colonySort ||= 'manual';
   cfg.collectionFilter ||= 'all';
+  cfg.colonyQuery ??= '';
+  cfg.organizerOpen ??= false;
   cfg.favoriteColonyId ||= '';
   cfg.summaryPeriod ||= 'month';
   cfg.notifications ||= {enabled:false,feeding:true,photos:true,tasks:true};
@@ -286,17 +288,21 @@ colonies=function(){
   ensureRoadmapData();
   const v7=db.appConfig.v7,v72=db.appConfig.v72,view=v7.colonyView||'active',layout=v7.colonyLayout||'detail';
   let list=db.colonies.filter(c=>view==='historical'?c.lifecycle==='historical':c.lifecycle!=='historical');
+  const total=list.length,query=String(v72.colonyQuery||'').trim().toLowerCase();
   if(v72.collectionFilter!=='all')list=list.filter(c=>String(c.collectionId||'')===String(v72.collectionFilter));
+  if(query)list=list.filter(c=>`${c.name||''} ${c.species||''} ${c.commonName||''} ${c.status||''} ${(c.tags||[]).join(' ')}`.toLowerCase().includes(query));
   list=sortedRoadmapColonies(list);
-  const manual=v72.colonySort==='manual';
-  return `<div class="section-title"><div><h2>${view==='historical'?'🏛️ Colonias históricas':'Mis colonias'}</h2><p>${list.length} ${view==='historical'?'historias conservadas':'fichas activas'}</p></div>${view==='active'?'<button class="button" data-new-colony>＋ Colonia</button>':''}</div>
+  const manual=v72.colonySort==='manual',filtered=query||v72.collectionFilter!=='all';
+  return `<div class="section-title"><div><h2>${view==='historical'?'🏛️ Colonias históricas':'Mis colonias'}</h2><p>${list.length}${filtered?` de ${total}`:''} ${view==='historical'?'historias conservadas':'fichas activas'}</p></div>${view==='active'?'<button class="button" data-new-colony>＋ Colonia</button>':''}</div>
   <div class="tabs"><button class="${view==='active'?'active':''}" data-colony-view="active">Activas</button><button class="${view==='historical'?'active':''}" data-colony-view="historical">Legado</button></div>
-  <section class="card colony-organizer"><div>${field('Orden',`<select id="colonyAutoSort"><option value="manual" ${manual?'selected':''}>Manual</option><option value="name" ${v72.colonySort==='name'?'selected':''}>Nombre</option><option value="species" ${v72.colonySort==='species'?'selected':''}>Especie</option><option value="workers" ${v72.colonySort==='workers'?'selected':''}>Población</option><option value="attention" ${v72.colonySort==='attention'?'selected':''}>Cuidados pendientes</option></select>`)}</div>
+  <form id="colonySearchForm" class="card colony-search" role="search"><span aria-hidden="true">⌕</span><input name="query" value="${esc(v72.colonyQuery||'')}" aria-label="Buscar colonia por nombre o especie" placeholder="Buscar colonia o especie…" autocomplete="off"><button class="button" aria-label="Buscar"><b>Buscar</b></button>${query?'<button type="button" class="colony-search-clear" data-clear-colony-search aria-label="Limpiar búsqueda">×</button>':''}</form>
+  <button class="card colony-organizer-toggle ${v72.organizerOpen?'is-open':''}" data-toggle-organizer aria-expanded="${v72.organizerOpen?'true':'false'}"><span aria-hidden="true">⚙</span><span><b>Organizar colonias</b><small>Orden, colección y carpetas</small></span><i aria-hidden="true">${v72.organizerOpen?'⌃':'⌄'}</i></button>
+  <section class="card colony-organizer ${v72.organizerOpen?'is-open':''}"><div>${field('Orden',`<select id="colonyAutoSort"><option value="manual" ${manual?'selected':''}>Manual</option><option value="name" ${v72.colonySort==='name'?'selected':''}>Nombre</option><option value="species" ${v72.colonySort==='species'?'selected':''}>Especie</option><option value="workers" ${v72.colonySort==='workers'?'selected':''}>Población</option><option value="attention" ${v72.colonySort==='attention'?'selected':''}>Cuidados pendientes</option></select>`)}</div>
   <div>${field('Colección',`<select id="colonyCollectionFilter"><option value="all">Todas</option><option value="">Sin colección</option>${db.collections.map(x=>`<option value="${esc(x.id)}" ${String(v72.collectionFilter)===String(x.id)?'selected':''}>${esc(x.name)}</option>`).join('')}</select>`)}</div>
   <button class="button secondary" data-manage-collections>Carpetas</button></section>
   <div class="colony-viewbar card"><div class="colony-view-options"><span class="view-label">Vista</span><button class="${layout==='detail'?'active':''}" data-colony-layout="detail" aria-label="Vista detallada">☷ <small>Detallada</small></button><button class="${layout==='grid'?'active':''}" data-colony-layout="grid" aria-label="Vista cuadrícula">▦ <small>Cuadrícula</small></button><button class="${layout==='compact'?'active':''}" data-colony-layout="compact" aria-label="Vista compacta">☰ <small>Compacta</small></button>${manual?`<button class="move-mode-toggle ${v7.colonyMoveMode?'active':''}" data-toggle-move aria-label="${v7.colonyMoveMode?'Terminar de ordenar':'Ordenar colonias'}">${v7.colonyMoveMode?'✓':'⇅'} <small>${v7.colonyMoveMode?'Terminar':'Ordenar'}</small></button>`:'<span class="auto-order-badge" aria-label="Orden automático">⇅ <small>Auto</small></span>'}</div></div>
   ${manual&&v7.colonyMoveMode?'<p class="sort-help">Mantén pulsada y arrastra una colonia, o utiliza las flechas para cambiar su posición.</p>':''}
-  <div class="colony-layout colony-layout-${layout}">${list.map((c,i)=>sortableColony(c,layout,i,list.length)).join('')||'<div class="card empty">No hay colonias en esta selección.</div>'}</div>`;
+  <div class="colony-layout colony-layout-${layout}">${list.map((c,i)=>sortableColony(c,layout,i,list.length)).join('')||`<div class="card empty">${query?'No hay colonias que coincidan con la búsqueda.':'No hay colonias en esta selección.'}</div>`}</div>`;
 };
 
 function collectionManager(){
@@ -727,6 +733,13 @@ drawChart=function(){
 
 bind=function(){
   v72BaseBind();ensureRoadmapData();
+  $('#colonySearchForm')&&($('#colonySearchForm').onsubmit=event=>{
+    event.preventDefault();
+    db.appConfig.v72.colonyQuery=String(new FormData(event.target).get('query')||'').trim();
+    save();render();
+  });
+  $('[data-clear-colony-search]')&&($('[data-clear-colony-search]').onclick=()=>{db.appConfig.v72.colonyQuery='';save();render()});
+  $('[data-toggle-organizer]')&&($('[data-toggle-organizer]').onclick=()=>{db.appConfig.v72.organizerOpen=!db.appConfig.v72.organizerOpen;save();render()});
   $('#colonyAutoSort')&&($('#colonyAutoSort').onchange=event=>{
     db.appConfig.v72.colonySort=event.target.value;
     if(event.target.value!=='manual')db.appConfig.v7.colonyMoveMode=false;
