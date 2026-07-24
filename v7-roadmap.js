@@ -71,8 +71,9 @@ function toDisplayDate(value){
 function toIsoDate(value){
   if(!value)return value;
   const text=String(value).trim();
-  const local=text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if(local)return `${local[3]}-${String(local[2]).padStart(2,'0')}-${String(local[1]).padStart(2,'0')}`;
+  if(/^\d{4}-\d{2}-\d{2}$/.test(text))return text;
+  const iso=AntelmoDate.toIso(text);
+  if(iso)return iso;
   return text;
 }
 
@@ -92,17 +93,35 @@ function prepareDateInputs(root=document){
     const value=input.value;
     input.type='text';
     input.inputMode='numeric';
-    input.placeholder='DD/MM/YYYY';
+    input.placeholder='DD/MM/AAAA';
     input.pattern='(?:0?[1-9]|[12][0-9]|3[01])/(?:0?[1-9]|1[0-2])/[0-9]{4}';
     input.value=toDisplayDate(value);
     input.dataset.localDate='true';
+    input.autocomplete='off';
+    input.addEventListener('input',()=>{
+      input.value=AntelmoDate.autoFormat(input.value);
+      input.setCustomValidity('');
+      input.setSelectionRange(input.value.length,input.value.length);
+    });
+    input.addEventListener('blur',validateLocalDate);
   });
 }
 
+function validateLocalDate(event){
+  const input=event.currentTarget||event.target;
+  const valid=(!input.required&&!input.value)||Boolean(AntelmoDate.parseDisplay(input.value));
+  input.setCustomValidity(valid?'':'Introduce una fecha real en formato DD/MM/AAAA.');
+  return valid;
+}
+
 document.addEventListener('submit',event=>{
-  event.target.querySelectorAll?.('[data-local-date="true"]').forEach(input=>{
-    input.value=toIsoDate(input.value);
-  });
+  const inputs=[...event.target.querySelectorAll?.('[data-local-date="true"]')||[]];
+  if(!inputs.every(input=>validateLocalDate({target:input}))){
+    event.preventDefault();
+    inputs.find(input=>!input.checkValidity())?.reportValidity();
+    return;
+  }
+  inputs.forEach(input=>{input.value=toIsoDate(input.value)});
 },true);
 
 openModal=function(html){
@@ -246,23 +265,36 @@ photoForm=function(id=''){
   openModal(`<h2>📸 Añadir multimedia</h2><p class="modal-intro">Las fotografías aparecerán automáticamente en el Diario y la cronología.</p>
   <form id="v72PhotoForm" class="form">${field('Colonia',`<select name="colonyId">${colonyOptions(id)}</select>`)}
   ${field('Fecha',`<input name="date" type="date" value="${today()}">`)}
-  ${field('Fotos o vídeo',`<input name="photo" type="file" accept="image/*,video/*" multiple required>`)}
+  ${field('Fotos o vídeo',`<input name="photo" type="file" accept="image/*,video/*" multiple required><small class="field-help">Puedes seleccionar varias. Revisa las miniaturas antes de guardar.</small>`)}
+  <div id="v7PhotoPreview" class="photo-upload-preview" aria-live="polite"></div>
   ${field('Descripción común',`<input name="caption" placeholder="Llegada, cría, mudanza, timelapse…">`)}
-  <label class="check-row"><input name="cover" type="checkbox"> Usar la primera fotografía como portada</label>
+  <label class="check-row"><input name="cover" type="checkbox"> Elegir una de estas fotos como portada</label>
   <button class="button">Guardar</button></form>`);
   $('#v72PhotoForm').onsubmit=async event=>{
     event.preventDefault();const form=event.target,fd=new FormData(form),files=[...form.elements.photo.files];
     if(!files.length)return;
     const colonyId=fd.get('colonyId'),date=toIsoDate(fd.get('date')),cover=fd.get('cover')==='on';
+    const coverIndex=Math.max(0,Number(form.elements.coverIndex?.value||0));
     if(cover)await clearCovers(colonyId);
     let i=0;for(const file of files){
       const blob=file.type.startsWith('image/')?await optimizeImage(file):file;
       const photo={id:uid('media'),colonyId,date,caption:fd.get('caption')||(files.length>1?`Archivo ${i+1}`:''),
-        cover:cover&&i===0&&file.type.startsWith('image/'),blob,createdAt:new Date().toISOString()};
+        cover:cover&&i===coverIndex&&file.type.startsWith('image/'),blob,createdAt:new Date().toISOString()};
       await photoPut(photo);indexMedia(photo);i++;
     }
     db.metadata.photoCount=(db.metadata.photoCount||0)+files.length;
     save();closeModal();toast(`${files.length} archivo${files.length===1?'':'s'} guardado${files.length===1?'':'s'}`);render();
+  };
+  const picker=$('#v72PhotoForm input[name="photo"]'),preview=$('#v7PhotoPreview');
+  picker.onchange=()=>{
+    preview.querySelectorAll('img,video').forEach(media=>URL.revokeObjectURL(media.src));
+    const files=[...picker.files];
+    preview.innerHTML=files.map((file,index)=>{
+      const src=URL.createObjectURL(file);
+      const visual=file.type.startsWith('video/')?`<video src="${src}" muted playsinline></video>`:
+        `<img src="${src}" alt="Vista previa ${index+1}">`;
+      return `<label>${visual}<span><input type="radio" name="coverIndex" value="${index}" ${index===0?'checked':''} ${file.type.startsWith('image/')?'':'disabled'}> Portada</span><small>${esc(file.name)}</small></label>`;
+    }).join('');
   };
 };
 
@@ -701,18 +733,20 @@ save=function(){
 };
 
 hubView=function(){
-  return v72BaseHubView()+`<div class="section-title"><div><h2>Roadmap integrado</h2><p>Organización, comparación y presentación</p></div></div><div class="module-grid roadmap-modules">
-  ${[['summaries','🗓️','Resúmenes','Semana, mes y año'],['compare','⚖️','Comparador','Hasta seis colonias'],['library','🏛️','Biblioteca','Archivo histórico'],['hall','🏆','Hall of Fame','Récords y favorita'],['presentation','🎴','Presentación','Tarjetas coleccionables'],['timelapse','🎞️','Timelapse','Evolución fotográfica'],['notifications','🔔','Avisos','Notificaciones del móvil'],['cloud','☁️','Nube automática','Conexión personal']].map(([dest,icon,title,text])=>`<button data-module="${dest}"><span>${icon}</span><b>${title}</b><small>${text}</small></button>`).join('')}</div>`;
+  return v72BaseHubView();
 };
 
 function roadmapTabs(){
   const tab=db.appConfig.moreTab||'hub';
-  const tabs=[['hub','Centro'],['global','Cronología'],['life','Vida'],['summaries','Resúmenes'],['compare','Comparar'],['legacy','Legado'],['library','Biblioteca'],['hall','Récords'],['feeding','Alimentación'],['smart','Cuidados'],['media','Fotos'],['timelapse','Timelapse'],['environment','Ambiente'],['ai','IA'],['achievements','Logros'],['encyclopedia','Enciclopedia'],['genealogy','Genealogía'],['presentation','Presentar'],['notifications','Avisos'],['sync','Copias'],['cloud','Nube'],['prediction','Predicción'],['fauna','Terrarios'],['scanner','AntScan'],['search','Buscar']];
+  const tabs=[['hub','Centro'],['global','Cronología'],['life','Diario'],['feeding','Alimentación'],['smart','Cuidados'],['media','Fotos'],['environment','Ambiente'],['encyclopedia','AntDex'],['sync','Copias'],['fauna','Terrarios'],['scanner','AntScan'],['search','Buscar']];
   return `<div class="tabs pro-tabs v7-tabs">${tabs.map(([key,label])=>`<button class="${tab===key?'active':''}" data-more-tab="${key}">${label}</button>`).join('')}</div>`;
 }
 
 more=function(){
-  ensureRoadmapData();const tab=db.appConfig.moreTab||'hub',bar=roadmapTabs();
+  ensureRoadmapData();
+  const allowed=new Set(['hub','global','life','feeding','smart','media','environment','encyclopedia','sync','fauna','scanner','search']);
+  if(!allowed.has(db.appConfig.moreTab))db.appConfig.moreTab='hub';
+  const tab=db.appConfig.moreTab||'hub',bar=roadmapTabs();
   const custom={summaries:summariesView,compare:compareView,library:libraryView,hall:hallView,presentation:presentationView,timelapse:timelapseView,notifications:notificationView,cloud:cloudSyncView};
   if(custom[tab])return bar+custom[tab]();
   return v72BaseMore().replace(/<div class="tabs pro-tabs v7-tabs">[\s\S]*?<\/div>/,bar);

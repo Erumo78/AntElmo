@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict');
+const dates=require('../date-utils.js');
+assert.equal(dates.toDisplay('2026-07-24'),'24/07/2026');
+assert.equal(dates.toIso('24/07/2026'),'2026-07-24');
+assert.equal(dates.toIso('29/02/2024'),'2024-02-29');
+assert.equal(dates.toIso('29/02/2025'),'');
+assert.equal(dates.toIso('31/04/2026'),'');
+assert.equal(dates.toIso('00/12/2026'),'');
+assert.equal(dates.autoFormat('24072026'),'24/07/2026');
+assert.equal(dates.autoFormat('24-07-2026'),'24/07/2026');
+console.log('date-utils: 8 comprobaciones superadas');

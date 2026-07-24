@@ -173,3 +173,17 @@
   .colony-organizer{display:none;grid-template-columns:1fr 1fr;margin-top:6px}
   .colony-organizer.is-open{display:grid}
 }
+
+/* V7.4 — formularios táctiles y selección visual de fotografías */
+.photo-upload-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:10px}
+.photo-upload-preview:empty{display:none}
+.photo-upload-preview label{display:grid;gap:6px;padding:7px;border:1px solid var(--line);border-radius:14px;background:var(--surface2);overflow:hidden}
+.photo-upload-preview img,.photo-upload-preview video{width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px;background:#111}
+.photo-upload-preview span{font-size:11px;font-weight:800}
+.photo-upload-preview small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)}
+input[data-local-date="true"]:invalid{border-color:#b96543;box-shadow:0 0 0 3px rgba(185,101,67,.12)}
+@media(max-width:620px){
+  button,.button,input,select,textarea{min-height:44px}
+  .modal-card{padding-bottom:max(24px,env(safe-area-inset-bottom))}
+  .photo-upload-preview{grid-template-columns:repeat(2,minmax(0,1fr))}
+}

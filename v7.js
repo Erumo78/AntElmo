@@ -181,10 +181,10 @@ home=function(){
   <div class="section-title workbench-section-title"><div><h2>Colonias vivas</h2><p>Estado, actividad y acciones rápidas</p></div><button class="link-btn" data-go="colonies">Organizar vistas</button></div>
   <div class="workbench-v7-grid">${active.map(workbenchV7Card).join('')||'<div class="card empty">Añade tu primera colonia para estrenar la mesa de trabajo.</div>'}</div>
   <div class="workbench-tools">
-    <button data-module="stats"><span>📊</span><b>Estadísticas</b><small>Evolución y actividad</small></button>
     <button data-module="global"><span>🌍</span><b>Cronología</b><small>Todo tu proyecto</small></button>
-    <button data-module="media"><span>🎞️</span><b>Fotografías</b><small>Galería y comparación</small></button>
-    <button data-module="ai"><span>🧠</span><b>Análisis</b><small>Patrones de cuidados</small></button>
+    <button data-module="feeding"><span>🍯</span><b>Alimentación</b><small>Historial completo</small></button>
+    <button data-module="media"><span>📷</span><b>Fotografías</b><small>Galería local</small></button>
+    <button data-module="encyclopedia"><span>🐜</span><b>AntDex</b><small>Fichas de especies</small></button>
   </div>${v7Summary()}`;
 };
 
@@ -300,13 +300,10 @@ records=function(){
 function hubView(){
   const modules=[
     ['home','🏠','Centro de mando','Estado general y cuidados'],['colonies','🐜','Gestión de colonias','Fichas activas y AntDex'],
-    ['records','📖','Diario','Registro científico'],['life','📚','Libro de Vida','Biografías automáticas'],
-    ['legacy','🏛️','Legado','Colonias históricas'],['global','🌍','Cronología global','Todo ANTELMO por fecha'],
+    ['records','📖','Diario','Fecha, notas y fotografías'],['global','🌍','Cronología global','Todo ANTELMO por fecha'],
     ['feeding','🍯','Alimentación','Historial y preferencias'],['environment','🌡️','Revisión ambiental','Temperatura y humedad'],
-    ['media','📷','Fotografías','Galería y comparación'],['stats','📊','Estadísticas','Crecimiento y actividad'],
-    ['ai','🧠','IA analítica','Patrones e historias'],['achievements','🏆','Logros','Hitos automáticos'],
-    ['encyclopedia','📚','Enciclopedia','Fichas de especies'],['genealogy','🌳','Genealogía','Linajes de reinas'],
-    ['sync','☁️','Sincronización','Copias completas'],['prediction','🔮','Predicción','Tendencias futuras']
+    ['media','📷','Fotografías','Galería y portadas'],['encyclopedia','📚','AntDex','Fichas de especies'],
+    ['sync','💾','Copias locales','Exportar e importar tus datos'],['fauna','🦎','Terrarios','Resto de tu fauna']
   ];
   return `<section class="module-intro"><span class="eyebrow">ANTELMO V7</span><h2>Un ecosistema, una sola historia</h2><p>Todos los módulos comparten los mismos registros. Una alimentación aparece en el Diario, el Libro de Vida, la cronología y las estadísticas sin duplicarse.</p></section>
   <div class="module-grid">${modules.map(([dest,icon,title,text])=>`<button data-module="${dest}"><span>${icon}</span><b>${title}</b><small>${text}</small></button>`).join('')}</div>`;

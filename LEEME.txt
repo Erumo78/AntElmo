@@ -1,6 +1,14 @@
-ANTELMO V7.3.3
+ANTELMO V7.4
 
 NOVEDADES
+- Fechas DD/MM/AAAA con barras automáticas, fecha actual y validación de días reales.
+- Alimentación rápida e historial conectado dentro de cada colonia.
+- Diario con fecha, notas y fotografías.
+- Tres vistas de colonias, orden manual y automático y búsqueda.
+- Previsualización de fotos y elección de portada antes de guardar.
+- Controles táctiles de al menos 44 px y mejor adaptación móvil.
+- Navegación V7 centrada en funciones sencillas; nube, IA, genealogía,
+  timelapse, avisos y estadísticas avanzadas quedan fuera por ahora.
 - Diario científico conectado con alimentaciones, eventos, recuentos y ambiente.
 - Libro de Vida y narración automática por colonia.
 - Cronología global de todo ANTELMO.
@@ -36,7 +44,7 @@ NOVEDADES
 INSTALACIÓN
 1. Exporta una copia desde la versión actual.
 2. Sustituye todos los archivos del repositorio.
-3. Abre https://erumo78.github.io/AntElmo/?v=733 una vez en Safari.
+3. Abre https://erumo78.github.io/AntElmo/?v=740 una vez en Safari.
 4. Cierra y vuelve a abrir la PWA instalada.
 
 NOTA
