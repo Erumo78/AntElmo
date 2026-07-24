@@ -693,8 +693,8 @@ save=function(){
 };
 
 hubView=function(){
-  return v72BaseHubView()+`<div class="section-title"><div><h2>Roadmap V7.2</h2><p>Organización, comparación y presentación</p></div></div><div class="module-grid roadmap-modules">
-  ${[['summaries','🗓️','Resúmenes','Semana, mes y año'],['compare','⚖️','Comparador','Dos colonias frente a frente'],['library','🏛️','Biblioteca','Archivo histórico'],['hall','🏆','Hall of Fame','Récords y favorita'],['presentation','🎴','Presentación','Tarjetas coleccionables'],['timelapse','🎞️','Timelapse','Evolución fotográfica'],['notifications','🔔','Avisos','Notificaciones del móvil'],['cloud','☁️','Nube automática','Conexión personal']].map(([dest,icon,title,text])=>`<button data-module="${dest}"><span>${icon}</span><b>${title}</b><small>${text}</small></button>`).join('')}</div>`;
+  return v72BaseHubView()+`<div class="section-title"><div><h2>Roadmap integrado</h2><p>Organización, comparación y presentación</p></div></div><div class="module-grid roadmap-modules">
+  ${[['summaries','🗓️','Resúmenes','Semana, mes y año'],['compare','⚖️','Comparador','Hasta seis colonias'],['library','🏛️','Biblioteca','Archivo histórico'],['hall','🏆','Hall of Fame','Récords y favorita'],['presentation','🎴','Presentación','Tarjetas coleccionables'],['timelapse','🎞️','Timelapse','Evolución fotográfica'],['notifications','🔔','Avisos','Notificaciones del móvil'],['cloud','☁️','Nube automática','Conexión personal']].map(([dest,icon,title,text])=>`<button data-module="${dest}"><span>${icon}</span><b>${title}</b><small>${text}</small></button>`).join('')}</div>`;
 };
 
 function roadmapTabs(){
