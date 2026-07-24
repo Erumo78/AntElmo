@@ -18,9 +18,13 @@ function ensureV7Data(){
   db.genealogy ||= [];
   db.appConfig ||= {};
   db.appConfig.v7 ||= {journalType:'all',journalColony:'all',journalQuery:'',colonyView:'active'};
+  db.appConfig.v7.colonyLayout ||= 'detail';
+  db.appConfig.v7.colonyMoveMode ??= false;
   db.appConfig.features={...(db.appConfig.features||{}),journal:true,lifeBook:true,legacy:true,globalTimeline:true,genealogy:true,prediction:true};
   if(db.appConfig.moreTab==='tools')db.appConfig.moreTab='hub';
   db.colonies ||= [];
+  db.appConfig.v7.colonyOrder ||= db.colonies.map(c=>String(c.id));
+  db.colonies.forEach(c=>{if(!db.appConfig.v7.colonyOrder.includes(String(c.id)))db.appConfig.v7.colonyOrder.push(String(c.id))});
   db.colonies.forEach(c=>{
     c.lifecycle ||= c.archivedAt?'historical':'active';
     c.tags ||= [];
@@ -36,6 +40,43 @@ save=function(){
   db.metadata={...(db.metadata||{}),schemaVersion:'7.0.0',updatedAt:new Date().toISOString()};
   localStorage.setItem('antelmo.v4',JSON.stringify(db));
 };
+
+function orderedColonies(list){
+  const order=db.appConfig.v7.colonyOrder||[];
+  return list.slice().sort((a,b)=>{
+    const ai=order.indexOf(String(a.id)),bi=order.indexOf(String(b.id));
+    return (ai<0?9999:ai)-(bi<0?9999:bi);
+  });
+}
+
+function colonyLayoutCard(c,layout){
+  if(layout==='detail')return colonyCard(c);
+  if(layout==='compact')return `<article class="card colony-compact-card" data-colony="${esc(c.id)}"><div class="avatar" id="cover-${esc(c.id)}">🐜</div><div><b>${esc(c.name)}</b><span class="latin">${esc(c.species||'Especie sin confirmar')}</span></div><strong>${esc(c.workers??'—')} <small>obreras</small></strong><span class="chip">${esc(c.status||'—')}</span></article>`;
+  const last=lastFeeding(c.id);
+  return `<article class="card colony-grid-card" data-colony="${esc(c.id)}"><div class="avatar" id="cover-${esc(c.id)}">🐜</div><span class="chip">${esc(c.status||'—')}</span><h3>${esc(c.name)}</h3><p class="latin">${esc(c.species||'Especie sin confirmar')}</p><div><span><b>${esc(c.workers??'—')}</b> obreras</span><span><b>${esc(c.queens??'—')}</b> reina${+c.queens===1?'':'s'}</span></div><small>${last?`🍯 ${esc(last.date)}`:'Sin alimentación'}</small></article>`;
+}
+
+function sortableColony(c,layout,index,total){
+  const moving=db.appConfig.v7.colonyMoveMode;
+  return `<div class="colony-sort-item ${moving?'is-sorting':''}" data-sort-colony="${esc(c.id)}" draggable="${moving?'true':'false'}">${colonyLayoutCard(c,layout)}${moving?`<div class="move-controls"><span>Arrastra o mueve</span><button data-move-colony="${esc(c.id)}" data-direction="-1" ${index===0?'disabled':''} aria-label="Subir ${esc(c.name)}">↑</button><button data-move-colony="${esc(c.id)}" data-direction="1" ${index===total-1?'disabled':''} aria-label="Bajar ${esc(c.name)}">↓</button></div>`:''}</div>`;
+}
+
+function moveVisibleColony(id,direction){
+  const cfg=db.appConfig.v7;
+  const visible=orderedColonies(db.colonies.filter(c=>cfg.colonyView==='historical'?c.lifecycle==='historical':c.lifecycle!=='historical')).map(c=>String(c.id));
+  const current=visible.indexOf(String(id)),next=current+Number(direction);
+  if(current<0||next<0||next>=visible.length)return;
+  const order=cfg.colonyOrder.slice(),a=order.indexOf(visible[current]),b=order.indexOf(visible[next]);
+  [order[a],order[b]]=[order[b],order[a]];cfg.colonyOrder=order;save();render();
+}
+
+function placeColonyBefore(sourceId,targetId){
+  if(!sourceId||!targetId||String(sourceId)===String(targetId))return;
+  const order=db.appConfig.v7.colonyOrder.filter(id=>String(id)!==String(sourceId));
+  const target=order.indexOf(String(targetId));
+  order.splice(target<0?order.length:target,0,String(sourceId));
+  db.appConfig.v7.colonyOrder=order;save();render();
+}
 
 exportBackup=async function(share=false){
   ensureV7Data();
@@ -96,22 +137,66 @@ function v7Summary(){
   </section>`;
 }
 
+function workbenchV7Card(c){
+  const [signal,icon,label]=healthSignal(c);
+  const feed=lastFeeding(c.id),feedDays=daysSince(feed?.date),activity=colonyActivity(c);
+  const chapters=journalItems(c.id).length;
+  return `<article class="workbench-v7-card ${signal}" data-colony="${esc(c.id)}">
+    <div class="workbench-v7-cover avatar" id="cover-${esc(c.id)}">🐜</div>
+    <div class="workbench-v7-main">
+      <div class="workbench-v7-title"><div><span class="dex-mini">ANTDEX · ${chapters} CAPÍTULO${chapters===1?'':'S'}</span><h3>${esc(c.name)}</h3><p class="latin">${esc(c.species||'Especie sin confirmar')}</p></div><span class="health-pill ${signal}">${icon} ${label}</span></div>
+      <div class="workbench-v7-stats"><span><b>${esc(c.workers??'—')}</b> obreras</span><span><b>${esc(c.queens??'—')}</b> reina${+c.queens===1?'':'s'}</span><span><b>${feedDays==null?'—':feedDays+' d'}</b> desde alimento</span></div>
+      <div class="workbench-v7-foot"><small>${activity?`Actualizada ${esc(activity)}`:'Sin actividad registrada'}</small><span>Ver colonia →</span></div>
+    </div>
+    <div class="workbench-v7-actions">
+      <button data-workbench-action="feed" data-workbench-colony="${esc(c.id)}" aria-label="Alimentar ${esc(c.name)}">🍯<small>Comida</small></button>
+      <button data-workbench-action="journal" data-workbench-colony="${esc(c.id)}" aria-label="Anotar en ${esc(c.name)}">📖<small>Diario</small></button>
+      <button data-workbench-action="growth" data-workbench-colony="${esc(c.id)}" aria-label="Recuento de ${esc(c.name)}">📈<small>Recuento</small></button>
+      <button data-workbench-action="photo" data-workbench-colony="${esc(c.id)}" aria-label="Fotografía de ${esc(c.name)}">📷<small>Foto</small></button>
+    </div>
+  </article>`;
+}
+
 home=function(){
   ensureV7Data();
-  const all=db.colonies;
-  db.colonies=all.filter(c=>c.lifecycle!=='historical');
-  let base;
-  try{base=v7BaseHome()}finally{db.colonies=all}
-  return base+v7Summary();
+  const all=db.colonies,active=orderedColonies(all.filter(c=>c.lifecycle!=='historical'));
+  db.colonies=active;
+  let care;
+  try{care=smartCareItems()}finally{db.colonies=all}
+  const attention=active.filter(c=>healthSignal(c)[0]!=='good').length;
+  const recent=journalItems().filter(x=>daysSince(x.date)!=null&&daysSince(x.date)<=7).length;
+  const dateLabel=new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long'}).format(new Date());
+  return `<section class="workbench-v7-hero">
+    <div class="workbench-v7-welcome"><span class="eyebrow">CENTRO DE MANDO · ${esc(dateLabel)}</span><h2>Tu mesa de trabajo</h2><p>Un vistazo claro a tus colonias y sus próximos cuidados.</p></div>
+    <div class="workbench-v7-primary"><button data-workbench-action="feed">🍯<span><b>Registrar comida</b><small>En pocos segundos</small></span></button><button data-workbench-action="journal">📖<span><b>Nueva entrada</b><small>Diario y Libro de Vida</small></span></button></div>
+  </section>
+  <div class="workbench-overview">
+    <article><span>🐜</span><div><b>${active.length}</b><small>colonias activas</small></div></article>
+    <article class="${attention?'needs-attention':''}"><span>${attention?'🔔':'🌿'}</span><div><b>${attention}</b><small>${attention===1?'cuidado pendiente':'cuidados pendientes'}</small></div></article>
+    <article><span>📖</span><div><b>${recent}</b><small>registros esta semana</small></div></article>
+    <article><span>📈</span><div><b>${active.reduce((n,c)=>n+(+c.workers||0),0)}</b><small>obreras registradas</small></div></article>
+  </div>
+  <div class="section-title workbench-section-title"><div><h2>Para hoy</h2><p>ANTELMO prioriza lo que necesita atención</p></div><button class="link-btn" data-module="smart">Ver cuidados</button></div>
+  <div class="workbench-care">${care.slice(0,4).map(x=>`<button data-smart-action="${x.action}" data-smart-colony="${esc(x.colonyId)}"><span>${x.icon}</span><div><b>${esc(x.title)}</b><small>${esc(x.text)}</small></div><i>Registrar</i></button>`).join('')||'<div class="workbench-all-good"><span>🌿</span><div><b>Todo parece al día</b><small>No hay cuidados pendientes según tus registros.</small></div></div>'}</div>
+  <div class="section-title workbench-section-title"><div><h2>Colonias vivas</h2><p>Estado, actividad y acciones rápidas</p></div><button class="link-btn" data-go="colonies">Organizar vistas</button></div>
+  <div class="workbench-v7-grid">${active.map(workbenchV7Card).join('')||'<div class="card empty">Añade tu primera colonia para estrenar la mesa de trabajo.</div>'}</div>
+  <div class="workbench-tools">
+    <button data-module="stats"><span>📊</span><b>Estadísticas</b><small>Evolución y actividad</small></button>
+    <button data-module="global"><span>🌍</span><b>Cronología</b><small>Todo tu proyecto</small></button>
+    <button data-module="media"><span>🎞️</span><b>Fotografías</b><small>Galería y comparación</small></button>
+    <button data-module="ai"><span>🧠</span><b>Análisis</b><small>Patrones de cuidados</small></button>
+  </div>${v7Summary()}`;
 };
 
 colonies=function(){
   ensureV7Data();
-  const view=db.appConfig.v7.colonyView||'active';
-  const list=db.colonies.filter(c=>view==='historical'?c.lifecycle==='historical':c.lifecycle!=='historical');
+  const cfg=db.appConfig.v7,view=cfg.colonyView||'active',layout=cfg.colonyLayout||'detail';
+  const list=orderedColonies(db.colonies.filter(c=>view==='historical'?c.lifecycle==='historical':c.lifecycle!=='historical'));
   return `<div class="section-title"><div><h2>${view==='historical'?'🏛️ Colonias históricas':'Mis colonias'}</h2><p>${list.length} ${view==='historical'?'historias conservadas':'fichas activas'}</p></div>${view==='active'?'<button class="button" data-new-colony>＋ Colonia</button>':''}</div>
   <div class="tabs"><button class="${view==='active'?'active':''}" data-colony-view="active">Activas</button><button class="${view==='historical'?'active':''}" data-colony-view="historical">Legado</button></div>
-  <div class="cards">${list.map(colonyCard).join('')||`<div class="card empty">${view==='historical'?'Las colonias que archives aparecerán aquí sin perder ningún dato.':'No hay colonias activas.'}</div>`}</div>`;
+  <div class="colony-viewbar card"><div><span>Vista</span><button class="${layout==='detail'?'active':''}" data-colony-layout="detail" aria-label="Vista detallada">☷ <small>Detallada</small></button><button class="${layout==='grid'?'active':''}" data-colony-layout="grid" aria-label="Vista cuadrícula">▦ <small>Cuadrícula</small></button><button class="${layout==='compact'?'active':''}" data-colony-layout="compact" aria-label="Vista compacta">☰ <small>Compacta</small></button></div><button class="${cfg.colonyMoveMode?'active':''}" data-toggle-move>↕ ${cfg.colonyMoveMode?'Terminar':'Ordenar'}</button></div>
+  ${cfg.colonyMoveMode?'<p class="sort-help">Mantén pulsada y arrastra una colonia, o utiliza las flechas para cambiar su posición.</p>':''}
+  <div class="colony-layout colony-layout-${layout}">${list.map((c,i)=>sortableColony(c,layout,i,list.length)).join('')||`<div class="card empty">${view==='historical'?'Las colonias que archives aparecerán aquí sin perder ningún dato.':'No hay colonias activas.'}</div>`}</div>`;
 };
 
 function documentaryHtml(c){
@@ -128,7 +213,9 @@ colonyDetail=function(id){
   if(!c)return colonies();
   const base=v7BaseColonyDetail(id);
   const historical=c.lifecycle==='historical';
-  return base+`<div class="section-title"><div><h2>📖 Libro de Vida</h2><p>Biografía construida con todos sus registros</p></div><button class="button" data-journal-for="${esc(c.id)}">＋ Entrada</button></div>
+  const careActions=historical?'':`<section class="colony-care-actions"><button data-feed-for="${esc(c.id)}"><span>🍯</span><b>Alimentar</b><small>${lastFeeding(c.id)?`Última: ${esc(lastFeeding(c.id).date)}`:'Sin registros'}</small></button><button data-growth-for="${esc(c.id)}"><span>📈</span><b>Recuento</b><small>Obreras y cría</small></button><button data-env-for="${esc(c.id)}"><span>🌡️</span><b>Ambiente</b><small>Temperatura y humedad</small></button><button data-detail-photo="${esc(c.id)}"><span>📷</span><b>Fotografía</b><small>Guardar evolución</small></button></section>`;
+  const detail=base.replace('</section>',`</section>${careActions}`);
+  return detail+`<div class="section-title"><div><h2>📖 Libro de Vida</h2><p>Biografía construida con todos sus registros</p></div><button class="button" data-journal-for="${esc(c.id)}">＋ Entrada</button></div>
   <article class="card life-story"><span>RELATO ACTUAL</span><p>${esc(storyForColony(c))}</p></article>
   ${documentaryHtml(c)}
   <div class="section-title"><div><h2>Últimos capítulos</h2><p>Alimentación, ambiente, recuentos y notas</p></div></div>
@@ -150,6 +237,20 @@ function journalForm(id=''){
     o.tags=String(o.tags||'').split(',').map(x=>x.trim()).filter(Boolean);
     db.journalEntries.push({id:uid('journal'),createdAt:new Date().toISOString(),...o});
     save();closeModal();toast('Entrada añadida al Libro de Vida');render();
+  };
+}
+
+function colonyEnvironmentForm(id=''){
+  openModal(`<h2>🌡️ Nueva medición</h2><p class="modal-intro">La medición quedará asociada a esta colonia y aparecerá también en su Libro de Vida.</p>
+  <form id="envForm" class="form">${field('Colonia o instalación',`<select name="colonyId"><option value="">General / terrario</option>${colonyOptions(id)}</select>`)}
+  <div class="row">${field('Fecha',`<input name="date" type="date" value="${today()}" required>`)}${field('Hora',`<input name="time" type="time">`)}</div>
+  <div class="row">${field('Temperatura °C',`<input name="temperature" type="number" step="0.1">`)}${field('Humedad %',`<input name="humidity" type="number" min="0" max="100">`)}</div>
+  ${field('Notas',`<textarea name="notes" placeholder="Condensación, depósito, ventilación…"></textarea>`)}
+  <button class="button">Guardar medición</button></form>`);
+  $('#envForm').onsubmit=e=>{
+    e.preventDefault();
+    db.environmentLogs.push({id:uid('env'),...Object.fromEntries(new FormData(e.target))});
+    save();closeModal();toast('Medición guardada');render();
   };
 }
 
@@ -312,6 +413,28 @@ bind=function(){
   $$('[data-journal-type]').forEach(b=>b.onclick=()=>{db.appConfig.v7.journalType=b.dataset.journalType;save();render()});
   $('#journalSearchForm')&&($('#journalSearchForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target));db.appConfig.v7.journalQuery=o.query;db.appConfig.v7.journalColony=o.colony;save();render()});
   $$('[data-colony-view]').forEach(b=>b.onclick=()=>{db.appConfig.v7.colonyView=b.dataset.colonyView;save();render()});
+  $$('[data-colony-layout]').forEach(b=>b.onclick=()=>{db.appConfig.v7.colonyLayout=b.dataset.colonyLayout;save();render()});
+  $('[data-toggle-move]')&&($('[data-toggle-move]').onclick=()=>{db.appConfig.v7.colonyMoveMode=!db.appConfig.v7.colonyMoveMode;save();render()});
+  $$('[data-move-colony]').forEach(b=>b.onclick=e=>{e.stopPropagation();moveVisibleColony(b.dataset.moveColony,b.dataset.direction)});
+  let draggedColony='';
+  $$('[data-sort-colony]').forEach(el=>{
+    el.ondragstart=e=>{draggedColony=el.dataset.sortColony;e.dataTransfer.effectAllowed='move';el.classList.add('dragging')};
+    el.ondragend=()=>el.classList.remove('dragging');
+    el.ondragover=e=>{if(db.appConfig.v7.colonyMoveMode)e.preventDefault()};
+    el.ondrop=e=>{e.preventDefault();placeColonyBefore(draggedColony,el.dataset.sortColony)};
+  });
+  $$('[data-feed-for]').forEach(b=>b.onclick=()=>feedingForm(b.dataset.feedFor));
+  $$('[data-growth-for]').forEach(b=>b.onclick=()=>growthForm(b.dataset.growthFor));
+  $$('[data-env-for]').forEach(b=>b.onclick=()=>colonyEnvironmentForm(b.dataset.envFor));
+  $$('[data-detail-photo]').forEach(b=>b.onclick=()=>photoForm(b.dataset.detailPhoto));
+  $$('[data-workbench-action]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    const id=b.dataset.workbenchColony||'',action=b.dataset.workbenchAction;
+    if(action==='feed')feedingForm(id);
+    if(action==='journal')journalForm(id);
+    if(action==='growth')growthForm(id);
+    if(action==='photo')photoForm(id);
+  });
   $$('[data-archive-colony]').forEach(b=>b.onclick=()=>archiveColonyForm(b.dataset.archiveColony));
   $('[data-restore-colony]')&&($('[data-restore-colony]').onclick=()=>{const c=db.colonies.find(x=>String(x.id)===String(selected));if(c){c.lifecycle='active';c.status='En observación';delete c.endedAt;delete c.endReason;save();toast('Colonia restaurada');render()}});
   $('[data-new-relation]')&&($('[data-new-relation]').onclick=genealogyForm);
