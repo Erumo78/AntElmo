@@ -1,4 +1,4 @@
-/* ANTELMO V7.3.1 — ampliaciones que funcionan íntegramente en el dispositivo. */
+/* ANTELMO V7.3.2 — ampliaciones que funcionan íntegramente en el dispositivo. */
 const v73BaseBind=bind;
 const v73BaseRender=render;
 const v73BaseSave=save;
@@ -16,7 +16,7 @@ function ensureLocalRoadmapData(){
   cfg.encyclopedia ||= {query:'',status:'all'};
   cfg.documentary ||= {colonyId:'',period:'all'};
   db.appConfig.dateFormat='DD/MM/YYYY';
-  db.metadata={...(db.metadata||{}),schemaVersion:'7.3.1'};
+  db.metadata={...(db.metadata||{}),schemaVersion:'7.3.2'};
 }
 
 function v73Date(value){
@@ -405,7 +405,7 @@ bind=function(){
 
 save=function(){
   ensureLocalRoadmapData();v73BaseSave();
-  db.metadata.schemaVersion='7.3.1';db.metadata.updatedAt=new Date().toISOString();
+  db.metadata.schemaVersion='7.3.2';db.metadata.updatedAt=new Date().toISOString();
   localStorage.setItem('antelmo.v4',JSON.stringify(db));
 };
 
