@@ -20,12 +20,12 @@ colonyDetail = function(id){
       <div class="antdex-top"><div><h2>${esc(c.name)}</h2><p class="latin">${esc(c.species||'Especie sin confirmar')}</p></div><button class="button secondary" data-edit-colony="${esc(c.id)}">Editar</button></div>
       <div class="type-chips"><span class="type-chip">🐜 ${esc(c.commonName||'Hormiga')}</span><span class="type-chip alt">${esc(c.status||'Sin estado')}</span></div>
       <p class="dex-description">${esc(c.notes||`${c.name} forma parte de tu colección ANTELMO. Añade notas para completar su ficha.`)}</p>
-      <div class="dex-facts"><span><b>Fundada</b>${esc(c.founded||'—')}</span><span><b>Origen</b>${esc(c.origin||'—')}</span><span><b>Hábitat</b>${esc(c.location||c.setup?.nestType||'—')}</span></div>
+      <div class="dex-facts"><span><b>Fundada</b>${esc(toDisplayDate(c.founded||'—'))}</span><span><b>Origen</b>${esc(c.origin||'—')}</span><span><b>Hábitat</b>${esc(c.location||c.setup?.nestType||'—')}</span></div>
     </div>
   </section>
   <div class="metric-grid dex-metrics"><div class="card"><b class="big-number">${esc(c.workers??'—')}</b><div class="sub">obreras</div></div><div class="card"><b class="big-number">${esc(c.queens??'—')}</b><div class="sub">reinas</div></div><div class="card"><b class="big-number">${growth?.eggs??c.brood?.eggs??'—'}</b><div class="sub">huevos</div></div><div class="card"><b class="big-number">${growth?.larvae??c.brood?.larvae??'—'}</b><div class="sub">larvas</div></div></div>
   <div class="section-title"><div><h2>Cuidados</h2><p>Últimos datos registrados</p></div></div>
-  <div class="cards"><div class="card"><b>🍯 Alimentación</b><div class="sub">${lf?`${esc(lf.food)} · ${esc(lf.date)}`:'Sin registros'}</div></div><div class="card"><b>🏠 Instalación</b><div class="sub">${esc(c.location||c.setup?.nestType||'Sin información')}</div></div></div>
+  <div class="cards"><div class="card"><b>🍯 Alimentación</b><div class="sub">${lf?`${esc(lf.food)} · ${esc(toDisplayDate(lf.date))}`:'Sin registros'}</div></div><div class="card"><b>🏠 Instalación</b><div class="sub">${esc(c.location||c.setup?.nestType||'Sin información')}</div></div></div>
   <div class="section-title"><div><h2>Álbum de evolución</h2><p>Haz fotos o elige varias de tu fototeca</p></div><button class="button secondary" data-photo-for="${esc(c.id)}">＋ Fotos</button></div>
   <div id="gallery" class="gallery gallery-rich"><div class="empty">Cargando…</div></div>`;
 };
@@ -73,7 +73,7 @@ async function editPhoto(id,colonyId){
 }
 
 function viewPhoto(p,url,colonyId){
-  openModal(`<div class="photo-viewer"><img src="${url}" alt="${esc(p.caption||'Fotografía')}"><div class="photo-viewer-info"><h2>${esc(p.caption||'Sin descripción')}</h2><p>${esc(p.date||'Sin fecha')} ${p.cover?'· ⭐ Portada':''}</p><div class="actions"><button class="button secondary" data-view-cover="${esc(p.id)}">⭐ Portada</button><button class="button secondary" data-view-edit="${esc(p.id)}">Editar</button></div></div></div>`);
+  openModal(`<div class="photo-viewer"><img src="${url}" alt="${esc(p.caption||'Fotografía')}"><div class="photo-viewer-info"><h2>${esc(p.caption||'Sin descripción')}</h2><p>${esc(toDisplayDate(p.date||'Sin fecha'))} ${p.cover?'· ⭐ Portada':''}</p><div class="actions"><button class="button secondary" data-view-cover="${esc(p.id)}">⭐ Portada</button><button class="button secondary" data-view-edit="${esc(p.id)}">Editar</button></div></div></div>`);
   $('[data-view-cover]').onclick=async()=>{await setPhotoCover(p.id,colonyId);closeModal()};
   $('[data-view-edit]').onclick=()=>editPhoto(p.id,colonyId);
 }
@@ -81,7 +81,7 @@ function viewPhoto(p,url,colonyId){
 loadGallery = async function(id){
   const el=$('#gallery');if(!el)return;
   const ps=await photosByColony(id);
-  el.innerHTML=ps.map(p=>{const url=URL.createObjectURL(p.blob);return `<article class="photo-card ${p.cover?'is-cover':''}"><button class="photo-open" data-view-photo="${esc(p.id)}" aria-label="Ver fotografía"><img src="${url}" alt="${esc(p.caption||'Fotografía')}"></button><div class="photo-meta"><div><b>${esc(p.caption||'Sin descripción')}</b><span>${esc(p.date||'Sin fecha')}</span></div>${p.cover?'<span class="cover-badge">⭐ Portada</span>':''}</div><div class="photo-actions"><button data-cover-photo="${esc(p.id)}" aria-label="Usar como portada">⭐</button><button data-edit-photo="${esc(p.id)}" aria-label="Editar">✎</button><button class="danger-icon" data-del-photo="${esc(p.id)}" aria-label="Eliminar">🗑</button></div></article>`}).join('')||'<div class="empty gallery-empty"><b>Tu álbum está vacío</b><span>Añade fotos antiguas desde Fototeca o haz una nueva.</span></div>';
+  el.innerHTML=ps.map(p=>{const url=URL.createObjectURL(p.blob);return `<article class="photo-card ${p.cover?'is-cover':''}"><button class="photo-open" data-view-photo="${esc(p.id)}" aria-label="Ver fotografía"><img src="${url}" alt="${esc(p.caption||'Fotografía')}"></button><div class="photo-meta"><div><b>${esc(p.caption||'Sin descripción')}</b><span>${esc(toDisplayDate(p.date||'Sin fecha'))}</span></div>${p.cover?'<span class="cover-badge">⭐ Portada</span>':''}</div><div class="photo-actions"><button data-cover-photo="${esc(p.id)}" aria-label="Usar como portada">⭐</button><button data-edit-photo="${esc(p.id)}" aria-label="Editar">✎</button><button class="danger-icon" data-del-photo="${esc(p.id)}" aria-label="Eliminar">🗑</button></div></article>`}).join('')||'<div class="empty gallery-empty"><b>Tu álbum está vacío</b><span>Añade fotos antiguas desde Fototeca o haz una nueva.</span></div>';
   $$('[data-view-photo]').forEach(b=>b.onclick=async()=>{const p=ps.find(x=>String(x.id)===String(b.dataset.viewPhoto));if(p)viewPhoto(p,b.querySelector('img').src,id)});
   $$('[data-cover-photo]').forEach(b=>b.onclick=()=>setPhotoCover(b.dataset.coverPhoto,id));
   $$('[data-edit-photo]').forEach(b=>b.onclick=()=>editPhoto(b.dataset.editPhoto,id));

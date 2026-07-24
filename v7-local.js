@@ -1,4 +1,4 @@
-/* ANTELMO V7.3 — ampliaciones que funcionan íntegramente en el dispositivo. */
+/* ANTELMO V7.3.1 — ampliaciones que funcionan íntegramente en el dispositivo. */
 const v73BaseBind=bind;
 const v73BaseRender=render;
 const v73BaseSave=save;
@@ -15,8 +15,8 @@ function ensureLocalRoadmapData(){
   cfg.compareIds=Array.isArray(cfg.compareIds)?cfg.compareIds.map(String):[];
   cfg.encyclopedia ||= {query:'',status:'all'};
   cfg.documentary ||= {colonyId:'',period:'all'};
-  db.appConfig.dateFormat='MM/DD/YYYY';
-  db.metadata={...(db.metadata||{}),schemaVersion:'7.3.0'};
+  db.appConfig.dateFormat='DD/MM/YYYY';
+  db.metadata={...(db.metadata||{}),schemaVersion:'7.3.1'};
 }
 
 function v73Date(value){
@@ -84,8 +84,8 @@ records=function(){
     <details ${activeFilters?'open':''}><summary>Filtros avanzados <span>${activeFilters||'ninguno'}</span></summary>
       <div class="v73-filter-grid">
         <label>Importancia<select name="importance">${['all','Normal','Importante','Hito'].map(value=>`<option value="${value}" ${cfg.importance===value?'selected':''}>${value==='all'?'Cualquier importancia':value}</option>`).join('')}</select></label>
-        <label>Desde<input name="from" type="text" inputmode="numeric" data-us-date="true" placeholder="MM/DD/YYYY" value="${esc(toDisplayDate(cfg.from||''))}"></label>
-        <label>Hasta<input name="to" type="text" inputmode="numeric" data-us-date="true" placeholder="MM/DD/YYYY" value="${esc(toDisplayDate(cfg.to||''))}"></label>
+        <label>Desde<input name="from" type="text" inputmode="numeric" data-local-date="true" placeholder="DD/MM/YYYY" value="${esc(toDisplayDate(cfg.from||''))}"></label>
+        <label>Hasta<input name="to" type="text" inputmode="numeric" data-local-date="true" placeholder="DD/MM/YYYY" value="${esc(toDisplayDate(cfg.to||''))}"></label>
         <label>Material<select name="media"><option value="all" ${cfg.media==='all'?'selected':''}>Con o sin fotos</option><option value="with" ${cfg.media==='with'?'selected':''}>Solo con fotos/vídeos</option><option value="without" ${cfg.media==='without'?'selected':''}>Sin material visual</option></select></label>
         <label>Etiquetas<input name="tags" value="${esc(cfg.tags||'')}" placeholder="cría, mudanza"></label>
       </div>
@@ -297,7 +297,7 @@ function v73DocumentaryView(){
   const photos=items.filter(v73JournalHasMedia).length,milestones=items.filter(item=>item.kind==='Hito'||item.importance==='Hito').length;
   return `<div class="section-title"><div><h2>🎞️ Documental de la colonia</h2><p>Historia, imágenes y crecimiento navegables por meses y años</p></div></div>
   <form id="v73DocumentaryControls" class="card v73-documentary-controls"><label>Colonia<select name="colonyId">${colonies.map(item=>`<option value="${esc(item.id)}" ${String(item.id)===String(colony.id)?'selected':''}>${esc(item.name)}</option>`).join('')}</select></label><label>Periodo<select name="period">${v73DocumentaryPeriodOptions(colony.id,cfg.period)}</select></label><button class="button">Mostrar</button><button type="button" class="button secondary" data-export-documentary>Exportar historia</button></form>
-  <section class="v73-documentary-hero" style="--colony-accent:${esc(colony.accentColor)}"><span>${esc(colony.icon||'🐜')}</span><div><small>LIBRO DE VIDA · ${esc(cfg.period==='all'?'HISTORIA COMPLETA':cfg.period)}</small><h2>${esc(colony.name)}</h2><i>${esc(colony.species||'Especie sin confirmar')}</i><p>${esc(storyForColony(colony))}</p></div></section>
+  <section class="v73-documentary-hero" style="--colony-accent:${esc(colony.accentColor)}"><span>${esc(colony.icon||'🐜')}</span><div><small>LIBRO DE VIDA · ${esc(cfg.period==='all'?'HISTORIA COMPLETA':toDisplayDate(cfg.period))}</small><h2>${esc(colony.name)}</h2><i>${esc(colony.species||'Especie sin confirmar')}</i><p>${esc(storyForColony(colony))}</p></div></section>
   <div class="v73-documentary-metrics"><span><b>${items.length}</b> escenas</span><span><b>${photos}</b> visuales</span><span><b>${milestones}</b> hitos</span><span><b>${db.growthRecords.filter(row=>String(row.colonyId)===String(colony.id)).length}</b> recuentos</span></div>
   <section class="card"><div class="section-title compact"><div><h3>Evolución registrada</h3><p>Obreras a lo largo del periodo seleccionado</p></div></div>${v73DocumentaryChart(colony,cfg.period)}</section>
   <div class="v73-documentary-reel">${chronological.map((item,index)=>`<article><div class="v73-scene-number">${String(index+1).padStart(2,'0')}</div>${entryHtml(item,false)}</article>`).join('')||'<div class="card empty">Este periodo todavía no tiene escenas.</div>'}</div>`;
@@ -307,7 +307,7 @@ function v73ExportDocumentary(){
   const cfg=db.appConfig.v73.documentary,colony=db.colonies.find(item=>String(item.id)===String(cfg.colonyId));
   if(!colony)return;
   const items=v73DocumentaryItems(colony.id,cfg.period).slice().reverse();
-  const content=`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(colony.name)} — Libro de Vida</title><style>body{font:16px system-ui;max-width:820px;margin:40px auto;padding:0 24px;color:#183329}h1{font-size:42px;margin-bottom:0}i{color:#557066}.intro{padding:24px;background:#eef5ef;border-radius:18px;margin:28px 0}.entry{border-left:4px solid #3d765c;padding:4px 0 22px 20px;margin-left:10px}.entry time{color:#677b72;font-size:13px}.entry h2{margin:6px 0}.tag{display:inline-block;background:#e4eee6;border-radius:99px;padding:3px 9px;margin:3px;font-size:12px}@media print{body{margin:0}.entry{break-inside:avoid}}</style></head><body><small>ANTELMO · LIBRO DE VIDA · ${esc(cfg.period==='all'?'HISTORIA COMPLETA':cfg.period)}</small><h1>${esc(colony.name)}</h1><i>${esc(colony.species||'Especie sin confirmar')}</i><p class="intro">${esc(storyForColony(colony))}</p>${items.map(item=>`<section class="entry"><time>${esc(toDisplayDate(item.date||'Sin fecha'))} · ${esc(item.kind||'Registro')}</time><h2>${esc(item.title||'Registro')}</h2><p>${esc(item.text||'')}</p>${(item.tags||[]).map(tag=>`<span class="tag">${esc(tag)}</span>`).join('')}</section>`).join('')}</body></html>`;
+  const content=`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(colony.name)} — Libro de Vida</title><style>body{font:16px system-ui;max-width:820px;margin:40px auto;padding:0 24px;color:#183329}h1{font-size:42px;margin-bottom:0}i{color:#557066}.intro{padding:24px;background:#eef5ef;border-radius:18px;margin:28px 0}.entry{border-left:4px solid #3d765c;padding:4px 0 22px 20px;margin-left:10px}.entry time{color:#677b72;font-size:13px}.entry h2{margin:6px 0}.tag{display:inline-block;background:#e4eee6;border-radius:99px;padding:3px 9px;margin:3px;font-size:12px}@media print{body{margin:0}.entry{break-inside:avoid}}</style></head><body><small>ANTELMO · LIBRO DE VIDA · ${esc(cfg.period==='all'?'HISTORIA COMPLETA':toDisplayDate(cfg.period))}</small><h1>${esc(colony.name)}</h1><i>${esc(colony.species||'Especie sin confirmar')}</i><p class="intro">${esc(storyForColony(colony))}</p>${items.map(item=>`<section class="entry"><time>${esc(toDisplayDate(item.date||'Sin fecha'))} · ${esc(item.kind||'Registro')}</time><h2>${esc(item.title||'Registro')}</h2><p>${esc(item.text||'')}</p>${(item.tags||[]).map(tag=>`<span class="tag">${esc(tag)}</span>`).join('')}</section>`).join('')}</body></html>`;
   const blob=new Blob([content],{type:'text/html;charset=utf-8'}),link=document.createElement('a');
   link.href=URL.createObjectURL(blob);link.download=`ANTELMO-${String(colony.name).replace(/[^\p{L}\p{N}]+/gu,'-')}-${cfg.period}.html`;link.click();
   setTimeout(()=>URL.revokeObjectURL(link.href),1000);toast('Documental exportado');
@@ -405,7 +405,7 @@ bind=function(){
 
 save=function(){
   ensureLocalRoadmapData();v73BaseSave();
-  db.metadata.schemaVersion='7.3.0';db.metadata.updatedAt=new Date().toISOString();
+  db.metadata.schemaVersion='7.3.1';db.metadata.updatedAt=new Date().toISOString();
   localStorage.setItem('antelmo.v4',JSON.stringify(db));
 };
 
