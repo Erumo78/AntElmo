@@ -1,5 +1,5 @@
 /* ANTELMO V7.2 — Roadmap visual, organización y continuidad.
-   Esta capa mantiene los datos ISO internamente y presenta las fechas como MM/DD/YYYY. */
+   Esta capa mantiene los datos ISO internamente y presenta las fechas como DD/MM/YYYY. */
 const v72BaseSave=save;
 const v72BaseBoot=boot;
 const v72BaseBind=bind;
@@ -60,15 +60,17 @@ function toDisplayDate(value){
   if(!value)return value;
   const text=String(value);
   const timestamp=text.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
-  if(timestamp)return `${timestamp[2]}/${timestamp[3]}/${timestamp[1]} · ${timestamp[4]}:${timestamp[5]}`;
-  return text.replace(/\b(\d{4})-(\d{2})-(\d{2})\b/g,'$2/$3/$1');
+  if(timestamp)return `${timestamp[3]}/${timestamp[2]}/${timestamp[1]} · ${timestamp[4]}:${timestamp[5]}`;
+  return text
+    .replace(/\b(\d{4})-(\d{2})-(\d{2})\b/g,'$3/$2/$1')
+    .replace(/\b(\d{4})-(\d{2})\b/g,'$2/$1');
 }
 
 function toIsoDate(value){
   if(!value)return value;
   const text=String(value).trim();
-  const us=text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if(us)return `${us[3]}-${String(us[1]).padStart(2,'0')}-${String(us[2]).padStart(2,'0')}`;
+  const local=text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(local)return `${local[3]}-${String(local[2]).padStart(2,'0')}-${String(local[1]).padStart(2,'0')}`;
   return text;
 }
 
@@ -88,15 +90,15 @@ function prepareDateInputs(root=document){
     const value=input.value;
     input.type='text';
     input.inputMode='numeric';
-    input.placeholder='MM/DD/YYYY';
-    input.pattern='(?:0?[1-9]|1[0-2])/(?:0?[1-9]|[12][0-9]|3[01])/[0-9]{4}';
+    input.placeholder='DD/MM/YYYY';
+    input.pattern='(?:0?[1-9]|[12][0-9]|3[01])/(?:0?[1-9]|1[0-2])/[0-9]{4}';
     input.value=toDisplayDate(value);
-    input.dataset.usDate='true';
+    input.dataset.localDate='true';
   });
 }
 
 document.addEventListener('submit',event=>{
-  event.target.querySelectorAll?.('[data-us-date="true"]').forEach(input=>{
+  event.target.querySelectorAll?.('[data-local-date="true"]').forEach(input=>{
     input.value=toIsoDate(input.value);
   });
 },true);
