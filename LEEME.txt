@@ -1,4 +1,4 @@
-ANTELMO V7.0
+ANTELMO V7.2
 
 NOVEDADES
 - Diario científico conectado con alimentaciones, eventos, recuentos y ambiente.
@@ -15,12 +15,20 @@ NOVEDADES
 - AntDex, fichas de especie, logros, evolución y AntScan de V5.
 - Sincronización portátil mediante copias completas compartibles con Archivos/iCloud/Drive.
 - Compatible con los datos locales de V4, V5 y V6.
+- Fechas visibles en formato mes/día/año.
+- Mesa configurable mediante widgets reordenables.
+- Carpetas, colecciones, orden automático e identidad visual por colonia.
+- Diario con fotografías y relaciones entre varias colonias.
+- Resúmenes semanales, mensuales y anuales.
+- Comparador de colonias, Biblioteca Histórica y Hall of Fame.
+- Timelapse fotográfico, zoom sincronizado, presentación y tarjetas coleccionables.
+- Avisos del sistema y sincronización automática con una nube personal opcional.
 
 INSTALACIÓN
 1. Exporta una copia desde la versión actual.
 2. Sustituye todos los archivos del repositorio.
-3. Abre https://erumo78.github.io/AntElmo/?v=700 una vez en Safari.
+3. Abre https://erumo78.github.io/AntElmo/?v=722 una vez en Safari.
 4. Cierra y vuelve a abrir la PWA instalada.
 
 NOTA
-La identificación automática real mediante IA y la sincronización continua entre dispositivos requieren un servicio externo y autenticación. V6 conserva la revisión AntScan y el uso de Compartir con ChatGPT, sin guardar claves ni enviar datos automáticamente.
+La identificación automática real mediante IA requiere un servicio externo. La nube automática V7.2 es opcional y necesita una dirección personal compatible con GET/PUT; las copias manuales siguen funcionando sin configurarla.
