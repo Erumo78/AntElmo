@@ -1,6 +1,12 @@
-ANTELMO V6.0
+ANTELMO V7.0
 
 NOVEDADES
+- Diario científico conectado con alimentaciones, eventos, recuentos y ambiente.
+- Libro de Vida y narración automática por colonia.
+- Cronología global de todo ANTELMO.
+- Legado para conservar colonias históricas sin eliminarlas.
+- Modo documental, IA analítica local, genealogía y predicción orientativa.
+- Centro modular V7 manteniendo el diseño y funcionamiento de V6.
 - Mesa de trabajo con tarjetas vivas y estado de cada colonia.
 - Analítica ampliada para obreras, huevos, larvas y pupas.
 - Calendario inteligente con sugerencias de alimentación y seguimiento visual.
@@ -8,12 +14,12 @@ NOVEDADES
 - Laboratorio multimedia: fotos, vídeos, búsqueda y comparación Antes/Después.
 - AntDex, fichas de especie, logros, evolución y AntScan de V5.
 - Sincronización portátil mediante copias completas compartibles con Archivos/iCloud/Drive.
-- Compatible con los datos locales de V4 y V5.
+- Compatible con los datos locales de V4, V5 y V6.
 
 INSTALACIÓN
 1. Exporta una copia desde la versión actual.
 2. Sustituye todos los archivos del repositorio.
-3. Abre https://erumo78.github.io/AntElmo/?v=600 una vez en Safari.
+3. Abre https://erumo78.github.io/AntElmo/?v=700 una vez en Safari.
 4. Cierra y vuelve a abrir la PWA instalada.
 
 NOTA

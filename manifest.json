@@ -1,11 +1,11 @@
 {
-  "name": "Antelmo - Control de colonias",
+  "name": "ANTELMO V7 - Libro de Vida",
   "short_name": "Antelmo",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#fbf8ef",
   "theme_color": "#1f5c2e",
-  "description": "Aplicación para registrar y controlar colonias de hormigas.",
+  "description": "Gestión, Diario y Libro de Vida de colonias de hormigas.",
   "icons": [
     {
       "src": "icon-192.png",
