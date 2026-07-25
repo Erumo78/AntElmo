@@ -73,12 +73,11 @@ function prepareSpanishWriting(root=document){
 const antelmoHotfixOpenModal=openModal;
 openModal=function(html){
   antelmoHotfixOpenModal(html);
-  prepareDateInputs(document.querySelector('#modalBody'));
   prepareSpanishWriting(document.querySelector('#modalBody'));
 };
 
 document.addEventListener('submit',event=>{
-  const inputs=[...event.target.querySelectorAll?.('[data-antelmo-date="true"]')||[]];
+  const inputs=[...(event.target.querySelectorAll?.('[data-antelmo-date="true"]')||[])];
   const invalid=inputs.find(input=>{
     const empty=!input.value.trim();
     const valid=empty&&!input.required||antelmoValidLocalDate(input.value);
