@@ -1,6 +1,11 @@
-ANTELMO V7.3.3
+ANTELMO V7.3.9
 
 NOVEDADES
+- Centro más compacto, con iconos a la izquierda y texto en la misma línea.
+- Textos secundarios de Vida unificados y con mayor contraste.
+- Comparador múltiple con columnas más estrechas y legibles.
+- La barra de Módulos conserva su posición horizontal al cambiar de sección.
+- Analítica avanzada con tarjetas más pequeñas y valores más fáciles de leer.
 - Diario científico conectado con alimentaciones, eventos, recuentos y ambiente.
 - Libro de Vida y narración automática por colonia.
 - Cronología global de todo ANTELMO.
@@ -36,8 +41,8 @@ NOVEDADES
 INSTALACIÓN
 1. Exporta una copia desde la versión actual.
 2. Sustituye todos los archivos del repositorio.
-3. Abre https://erumo78.github.io/AntElmo/?v=733 una vez en Safari.
+3. Abre https://erumo78.github.io/AntElmo/?v=739 una vez en Safari.
 4. Cierra y vuelve a abrir la PWA instalada.
 
 NOTA
-La identificación automática real mediante IA requiere un servicio externo. La nube automática V7.3.3 es opcional y necesita una dirección personal compatible con GET/PUT; las copias manuales siguen funcionando sin configurarla.
+La identificación automática real mediante IA requiere un servicio externo. La nube automática V7.3.9 es opcional y necesita una dirección personal compatible con GET/PUT; las copias manuales siguen funcionando sin configurarla.
