@@ -1,6 +1,14 @@
-ANTELMO V7.3.9
+ANTELMO V7.3.10
 
 NOVEDADES
+- Deshacer disponible tras guardar, editar o eliminar registros, incluidas las acciones masivas.
+- Autoguardado de borradores en Diario, Alimentación y formulario de colonia.
+- Tablas de Datos y Comparar adaptadas al móvil, con encabezados fijos y aviso de desplazamiento.
+- Centro todavía más compacto, con texto siempre a la derecha del icono.
+- Gráfica de Evolución registrada más contenida y con obreras y fechas más legibles.
+- Libro de Vida en negro durante la apariencia Día.
+- Todas las categorías de AntDex se pueden minimizar; corregidos Cuidados, Fotografías y Últimos capítulos.
+- Corregido el solapamiento del título Temperatura/crecimiento en Datos.
 - Centro más compacto, con iconos a la izquierda y texto en la misma línea.
 - Textos secundarios de Vida unificados y con mayor contraste.
 - Comparador múltiple con columnas más estrechas y legibles.
@@ -41,8 +49,8 @@ NOVEDADES
 INSTALACIÓN
 1. Exporta una copia desde la versión actual.
 2. Sustituye todos los archivos del repositorio.
-3. Abre https://erumo78.github.io/AntElmo/?v=739 una vez en Safari.
+3. Abre https://erumo78.github.io/AntElmo/?v=7310 una vez en Safari.
 4. Cierra y vuelve a abrir la PWA instalada.
 
 NOTA
-La identificación automática real mediante IA requiere un servicio externo. La nube automática V7.3.9 es opcional y necesita una dirección personal compatible con GET/PUT; las copias manuales siguen funcionando sin configurarla.
+La identificación automática real mediante IA requiere un servicio externo. La nube automática V7.3.10 es opcional y necesita una dirección personal compatible con GET/PUT; las copias manuales siguen funcionando sin configurarla.
