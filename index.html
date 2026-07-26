@@ -6,12 +6,12 @@
 <meta name="theme-color" content="#123f32">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="manifest" href="manifest.webmanifest?v=7313">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<link rel="stylesheet" href="styles.css?v=7310">
+<link rel="stylesheet" href="styles.css?v=7313">
 <meta name="description" content="Gestión privada y sin conexión de colonias de hormigas y terrarios">
-<title>ANTELMO V7.3.12</title>
+<title>ANTELMO V7.3.13</title>
 </head>
 <body>
 <div class="shell">
@@ -22,21 +22,31 @@
 <nav id="nav" class="bottom-nav"></nav>
 <div id="modal" class="modal"><section class="modal-card"><div class="grabber"></div><button id="modalClose" class="modal-close">×</button><div id="modalBody"></div></section></div>
 <div id="toast" class="toast"></div>
-<script src="app.js?v=7310"></script>
-<script src="pro.js?v=7310"></script>
-<script src="photo-dex.js?v=7310"></script>
-<script src="v5.js?v=7310"></script>
-<script src="v6.js?v=7310"></script>
-<script src="v7.js?v=7310"></script>
-<script src="v7-roadmap.js?v=7310"></script>
-<script src="v7-local.js?v=7310"></script>
-<script src="v7-hotfix.js?v=7310"></script>
-<script src="v7-pending.js?v=7310"></script>
-<script src="v7-final.js?v=7310"></script>
-<script src="v7-polish.js?v=7310"></script>
-<script src="v7-7310.js?v=7310"></script>
-<script src="v7-7311.js?v=7311"></script>
-<script src="v7-7312.js?v=7312"></script>
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js?v=7313',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{});
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(sessionStorage.getItem('antelmo-sw-7313-reloaded'))return;
+    sessionStorage.setItem('antelmo-sw-7313-reloaded','1');
+    location.reload();
+  });
+}
+</script>
+<script src="app.js?v=7313"></script>
+<script src="pro.js?v=7313"></script>
+<script src="photo-dex.js?v=7313"></script>
+<script src="v5.js?v=7313"></script>
+<script src="v6.js?v=7313"></script>
+<script src="v7.js?v=7313"></script>
+<script src="v7-roadmap.js?v=7313"></script>
+<script src="v7-local.js?v=7313"></script>
+<script src="v7-hotfix.js?v=7313"></script>
+<script src="v7-pending.js?v=7313"></script>
+<script src="v7-final.js?v=7313"></script>
+<script src="v7-polish.js?v=7313"></script>
+<script src="v7-7310.js?v=7313"></script>
+<script src="v7-7311.js?v=7313"></script>
+<script src="v7-7312.js?v=7313"></script>
 <script>startAntelmo()</script>
 </body>
 </html>
