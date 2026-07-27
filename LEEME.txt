@@ -1,6 +1,11 @@
-ANTELMO V7.3.10
+ANTELMO V7.3.27
 
 NOVEDADES
+- Terrarios y Habitantes: edición persistente, altas con recuperación ante error y visor con foto anterior/siguiente.
+- La restauración valida la copia completa antes de sustituir datos o fotografías.
+- Módulos reorganizados en Centro, Historia, Cuidados, AntDex, Terrarios y Datos.
+- Comparadores unificados; AntDex y Enciclopedia comparten entrada; Historia, resúmenes y documental quedan agrupados.
+- Seguridad, copia completa, datos y nube quedan fuera de las fichas de Terrarios/Habitantes.
 - Deshacer disponible tras guardar, editar o eliminar registros, incluidas las acciones masivas.
 - Autoguardado de borradores en Diario, Alimentación y formulario de colonia.
 - Tablas de Datos y Comparar adaptadas al móvil, con encabezados fijos y aviso de desplazamiento.
@@ -49,7 +54,7 @@ NOVEDADES
 INSTALACIÓN
 1. Exporta una copia desde la versión actual.
 2. Sustituye todos los archivos del repositorio.
-3. Abre https://erumo78.github.io/AntElmo/?v=7310 una vez en Safari.
+3. Abre https://erumo78.github.io/AntElmo/?v=7327 una vez en Safari.
 4. Cierra y vuelve a abrir la PWA instalada.
 
 NOTA

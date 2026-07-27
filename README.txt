@@ -9,4 +9,4 @@ ANTELMO — instalación rápida
    - Pulsa “Añadir a pantalla de inicio”.
 
 Los datos se guardan localmente en el dispositivo.
-En Estadísticas puedes exportar e importar una copia JSON.
+En Módulos → Datos → Seguridad y copia puedes crear o restaurar una copia JSON completa.
