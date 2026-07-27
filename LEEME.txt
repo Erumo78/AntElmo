@@ -1,6 +1,12 @@
-ANTELMO V7.3.27
+ANTELMO V7.3.28
 
 NOVEDADES
+- Escudo de datos retirado de MANDO: queda en DATOS y abre Módulos → Datos → Seguridad y copia.
+- Colonias vivas, Modo documental y Ciclo de la colonia tienen controles +/− persistentes.
+- La edición de colonia permite crear y seleccionar una colección sin salir del formulario.
+- Hábitat ocupa una fila completa bajo Fundada y Origen.
+- Mayor contraste para las descripciones del Diario científico en Noche y Automático oscuro.
+- Copia completa con opción visible y fiable en dos pasos para abrir Archivos/iCloud Drive, más descarga alternativa.
 - Terrarios y Habitantes: edición persistente, altas con recuperación ante error y visor con foto anterior/siguiente.
 - La restauración valida la copia completa antes de sustituir datos o fotografías.
 - Módulos reorganizados en Centro, Historia, Cuidados, AntDex, Terrarios y Datos.
@@ -54,7 +60,7 @@ NOVEDADES
 INSTALACIÓN
 1. Exporta una copia desde la versión actual.
 2. Sustituye todos los archivos del repositorio.
-3. Abre https://erumo78.github.io/AntElmo/?v=7327 una vez en Safari.
+3. Abre https://erumo78.github.io/AntElmo/?v=7328 una vez en Safari.
 4. Cierra y vuelve a abrir la PWA instalada.
 
 NOTA

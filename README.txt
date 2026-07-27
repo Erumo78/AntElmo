@@ -9,4 +9,4 @@ ANTELMO — instalación rápida
    - Pulsa “Añadir a pantalla de inicio”.
 
 Los datos se guardan localmente en el dispositivo.
-En Módulos → Datos → Seguridad y copia puedes crear o restaurar una copia JSON completa.
+En DATOS → Abrir Seguridad y copia puedes guardar en Archivos/iCloud Drive, descargar o restaurar una copia JSON completa.
