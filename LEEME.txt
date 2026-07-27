@@ -1,7 +1,13 @@
-ANTELMO V7.3.28
+ANTELMO V7.3.29
 
 NOVEDADES
-- Escudo de datos retirado de MANDO: queda en DATOS y abre Módulos → Datos → Seguridad y copia.
+- Módulos compactos en dos columnas dentro de cada categoría.
+- Seguridad, datos y nube contiene únicamente copia, traslado y nube; analítica y comparación siguen en DATOS.
+- Escudo de datos retirado de MANDO y DATOS: queda solo en Módulos → Datos → Seguridad y copia.
+- Modo documental y Ciclo de la colonia usan el mismo encabezado plegable que las demás secciones.
+- Acciones de colonia ordenadas dos a dos y tarjetas de población más compactas.
+- Creación de colección compacta e integrada en la edición de colonia.
+- Eliminada la repetición de Sincronización y Nube dentro de Seguridad y copia.
 - Colonias vivas, Modo documental y Ciclo de la colonia tienen controles +/− persistentes.
 - La edición de colonia permite crear y seleccionar una colección sin salir del formulario.
 - Hábitat ocupa una fila completa bajo Fundada y Origen.
@@ -60,7 +66,7 @@ NOVEDADES
 INSTALACIÓN
 1. Exporta una copia desde la versión actual.
 2. Sustituye todos los archivos del repositorio.
-3. Abre https://erumo78.github.io/AntElmo/?v=7328 una vez en Safari.
+3. Abre https://erumo78.github.io/AntElmo/?v=7329 una vez en Safari.
 4. Cierra y vuelve a abrir la PWA instalada.
 
 NOTA
