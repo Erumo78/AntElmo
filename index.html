@@ -6,12 +6,12 @@
 <meta name="theme-color" content="#123f32">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.webmanifest?v=7329">
+<link rel="manifest" href="manifest.webmanifest?v=7330">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<link rel="stylesheet" href="styles.css?v=7329">
+<link rel="stylesheet" href="styles.css?v=7330">
 <meta name="description" content="Gestión privada y sin conexión de colonias de hormigas y terrarios">
-<title>ANTELMO V7.3.29</title>
+<title>ANTELMO V7.3.30</title>
 </head>
 <body>
 <div class="shell">
@@ -24,45 +24,46 @@
 <div id="toast" class="toast"></div>
 <script>
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js?v=7329',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{});
+  navigator.serviceWorker.register('sw.js?v=7330',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{});
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    if(sessionStorage.getItem('antelmo-sw-7329-reloaded'))return;
-    sessionStorage.setItem('antelmo-sw-7329-reloaded','1');
+    if(sessionStorage.getItem('antelmo-sw-7330-reloaded'))return;
+    sessionStorage.setItem('antelmo-sw-7330-reloaded','1');
     location.reload();
   });
 }
 </script>
-<script src="app.js?v=7329"></script>
-<script src="pro.js?v=7329"></script>
-<script src="photo-dex.js?v=7329"></script>
-<script src="v5.js?v=7329"></script>
-<script src="v6.js?v=7329"></script>
-<script src="v7.js?v=7329"></script>
-<script src="v7-roadmap.js?v=7329"></script>
-<script src="v7-local.js?v=7329"></script>
-<script src="v7-hotfix.js?v=7329"></script>
-<script src="v7-pending.js?v=7329"></script>
-<script src="v7-final.js?v=7329"></script>
-<script src="v7-polish.js?v=7329"></script>
-<script src="v7-7310.js?v=7329"></script>
-<script src="v7-7311.js?v=7329"></script>
-<script src="v7-7312.js?v=7329"></script>
-<script src="v7-7314.js?v=7329"></script>
-<script src="v7-7315.js?v=7329"></script>
-<script src="v7-7316.js?v=7329"></script>
-<script src="v7-7317.js?v=7329"></script>
-<script src="v7-7318.js?v=7329"></script>
-<script src="v7-7319.js?v=7329"></script>
-<script src="v7-7320.js?v=7329"></script>
-<script src="v7-7321.js?v=7329"></script>
-<script src="v7-7322.js?v=7329"></script>
-<script src="v7-7323.js?v=7329"></script>
-<script src="v7-7324.js?v=7329"></script>
-<script src="v7-7325.js?v=7329"></script>
-<script src="v7-7326.js?v=7329"></script>
-<script src="v7-7327.js?v=7329"></script>
-<script src="v7-7328.js?v=7329"></script>
-<script src="v7-7329.js?v=7329"></script>
+<script src="app.js?v=7330"></script>
+<script src="pro.js?v=7330"></script>
+<script src="photo-dex.js?v=7330"></script>
+<script src="v5.js?v=7330"></script>
+<script src="v6.js?v=7330"></script>
+<script src="v7.js?v=7330"></script>
+<script src="v7-roadmap.js?v=7330"></script>
+<script src="v7-local.js?v=7330"></script>
+<script src="v7-hotfix.js?v=7330"></script>
+<script src="v7-pending.js?v=7330"></script>
+<script src="v7-final.js?v=7330"></script>
+<script src="v7-polish.js?v=7330"></script>
+<script src="v7-7310.js?v=7330"></script>
+<script src="v7-7311.js?v=7330"></script>
+<script src="v7-7312.js?v=7330"></script>
+<script src="v7-7314.js?v=7330"></script>
+<script src="v7-7315.js?v=7330"></script>
+<script src="v7-7316.js?v=7330"></script>
+<script src="v7-7317.js?v=7330"></script>
+<script src="v7-7318.js?v=7330"></script>
+<script src="v7-7319.js?v=7330"></script>
+<script src="v7-7320.js?v=7330"></script>
+<script src="v7-7321.js?v=7330"></script>
+<script src="v7-7322.js?v=7330"></script>
+<script src="v7-7323.js?v=7330"></script>
+<script src="v7-7324.js?v=7330"></script>
+<script src="v7-7325.js?v=7330"></script>
+<script src="v7-7326.js?v=7330"></script>
+<script src="v7-7327.js?v=7330"></script>
+<script src="v7-7328.js?v=7330"></script>
+<script src="v7-7329.js?v=7330"></script>
+<script src="v7-7330.js?v=7330"></script>
 <script>startAntelmo()</script>
 </body>
 </html>
